@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?android:attr/listPreferredItemHeight"
+                android:paddingTop="8dp">
+
+    <ImageView
+        android:id="@android:id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_action_device_sd_storage"
+        tools:ignore="ContentDescription"/>
+
+    <TextView
+        android:id="@android:id/text1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@android:id/icon"
+        android:text="/mnt/sdcard"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        tools:ignore="HardcodedText,RtlHardcoded"/>
+
+    <TextView
+        android:id="@android:id/text2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@android:id/text1"
+        android:layout_below="@android:id/text1"
+        android:text="mounted"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textStyle="italic"
+        tools:ignore="HardcodedText,RtlHardcoded"/>
+
+</RelativeLayout>
