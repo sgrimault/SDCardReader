@@ -10,19 +10,9 @@ import android.os.Parcelable;
  */
 public class MountPoint implements Parcelable {
 
-    private String mountPath;
-    private String storageState;
-    private StorageType storageType;
-
-    public MountPoint(
-            String mountPath,
-            StorageType storageType) {
-        this(
-                mountPath,
-                null,
-                storageType
-        );
-    }
+    private final String mountPath;
+    private final String storageState;
+    private final StorageType storageType;
 
     public MountPoint(
             String mountPath,
@@ -88,7 +78,7 @@ public class MountPoint implements Parcelable {
     }
 
     public static final Creator<MountPoint> CREATOR = new Creator<MountPoint>() {
-        
+
         @Override
         public MountPoint createFromParcel(Parcel source) {
             return new MountPoint(source);

@@ -13,12 +13,12 @@ import com.makina.sdcardreader.model.MountPoint;
 
 /**
  * Default {@code Adapter} of {@link com.makina.sdcardreader.model.MountPoint}.
- *  
+ *
  * @author <a href="mailto:sebastien.grimault@makina-corpus.com">S. Grimault</a>
  */
 public class MountPointArrayAdapter extends ArrayAdapter<MountPoint> {
 
-    private int mTextViewResourceId;
+    private final int mTextViewResourceId;
     private final LayoutInflater mInflater;
 
     public MountPointArrayAdapter(Context context) {
