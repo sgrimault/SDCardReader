@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
-    package="com.makina.sdcardreader"
+    package="sc.sn.sdcardreader"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:versionCode="5">
+    android:versionCode="12">
 
     <uses-permission android:name="android.permission.STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>

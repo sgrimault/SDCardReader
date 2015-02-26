@@ -1,4 +1,4 @@
-package com.makina.sdcardreader.ui;
+package sc.sn.sdcardreader.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -6,13 +6,13 @@ import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
 
-import com.makina.sdcardreader.R;
-import com.makina.sdcardreader.model.MountPoint;
-import com.makina.sdcardreader.ui.adapter.MountPointArrayAdapter;
-import com.makina.sdcardreader.util.FileUtils;
+import sc.sn.sdcardreader.R;
+import sc.sn.sdcardreader.model.MountPoint;
+import sc.sn.sdcardreader.ui.adapter.MountPointArrayAdapter;
+import sc.sn.sdcardreader.util.FileUtils;
 
 /**
- * A fragment representing a list of {@link com.makina.sdcardreader.model.MountPoint}s.
+ * A fragment representing a list of {@link sc.sn.sdcardreader.model.MountPoint}s.
  * <p/>
  * <p/>
  * Activities containing this fragment MUST implement the {@link OnMountPointListFragmentListener}
@@ -106,8 +106,8 @@ public class MountPointListFragment extends ListFragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * 
-     * @author <a href="mailto:sebastien.grimault@makina-corpus.com">S. Grimault</a> 
+     *
+     * @author <a href="mailto:sebastien.grimault@makina-corpus.com">S. Grimault</a>
      */
     public interface OnMountPointListFragmentListener {
         public void onMountPointSelected(MountPoint mountPoint);

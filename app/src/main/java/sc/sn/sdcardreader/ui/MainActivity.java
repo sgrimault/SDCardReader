@@ -1,14 +1,14 @@
-package com.makina.sdcardreader.ui;
+package sc.sn.sdcardreader.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
-import com.makina.sdcardreader.R;
-import com.makina.sdcardreader.model.MountPoint;
+import sc.sn.sdcardreader.R;
+import sc.sn.sdcardreader.model.MountPoint;
 
 /**
  * this is the main {@code Activity} of this application.
- *  
+ *
  * @author <a href="mailto:sebastien.grimault@makina-corpus.com">S. Grimault</a>
  */
 public class MainActivity extends ActionBarActivity implements MountPointListFragment.OnMountPointListFragmentListener {
@@ -28,6 +28,6 @@ public class MainActivity extends ActionBarActivity implements MountPointListFra
 
     @Override
     public void onMountPointSelected(MountPoint mountPoint) {
-        
+
     }
 }

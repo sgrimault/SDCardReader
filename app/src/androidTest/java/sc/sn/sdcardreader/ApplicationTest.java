@@ -1,4 +1,4 @@
-package com.makina.sdcardreader;
+package sc.sn.sdcardreader;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

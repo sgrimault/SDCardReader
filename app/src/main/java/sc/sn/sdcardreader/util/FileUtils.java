@@ -1,27 +1,27 @@
-package com.makina.sdcardreader.util;
+package sc.sn.sdcardreader.util;
 
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.makina.sdcardreader.model.MountPoint;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import sc.sn.sdcardreader.model.MountPoint;
+
 /**
- * Class helper about {@code File} and {@link com.makina.sdcardreader.model.MountPoint}.
+ * Class helper about {@code File} and {@link sc.sn.sdcardreader.model.MountPoint}.
  *
  * @author <a href="mailto:sebastien.grimault@makina-corpus.com">S. Grimault</a>
  */
 public class FileUtils {
 
     /**
-     * Retrieves a {@code List} of {@link com.makina.sdcardreader.model.MountPoint}s from {@code System}
+     * Retrieves a {@code List} of {@link sc.sn.sdcardreader.model.MountPoint}s from {@code System}
      * environment.
      *
-     * @return a {@code List} of available {@link com.makina.sdcardreader.model.MountPoint}s
+     * @return a {@code List} of available {@link sc.sn.sdcardreader.model.MountPoint}s
      */
     @NonNull
     public static List<MountPoint> getMountPointsFromSystemEnv() {

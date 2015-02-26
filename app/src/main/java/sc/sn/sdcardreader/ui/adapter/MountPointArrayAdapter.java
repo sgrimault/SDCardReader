@@ -1,4 +1,4 @@
-package com.makina.sdcardreader.ui.adapter;
+package sc.sn.sdcardreader.ui.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,11 +8,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.makina.sdcardreader.R;
-import com.makina.sdcardreader.model.MountPoint;
+import sc.sn.sdcardreader.R;
+import sc.sn.sdcardreader.model.MountPoint;
 
 /**
- * Default {@code Adapter} of {@link com.makina.sdcardreader.model.MountPoint}.
+ * Default {@code Adapter} of {@link sc.sn.sdcardreader.model.MountPoint}.
  *
  * @author <a href="mailto:sebastien.grimault@makina-corpus.com">S. Grimault</a>
  */

@@ -1,4 +1,4 @@
-package com.makina.sdcardreader.model;
+package sc.sn.sdcardreader.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
