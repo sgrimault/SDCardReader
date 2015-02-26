@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 
+version = "0.0.1"
+
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
@@ -8,13 +10,26 @@ android {
         applicationId "com.makina.sdcardreader"
         minSdkVersion 10
         targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+        versionName version
+        buildConfigField "String", "BUILD_DATE", "\"" + new Date().getTime() + "\""
     }
+
     buildTypes {
+        debug {
+            versionNameSuffix "-DEV"
+        }
+
         release {
+            debuggable false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            zipAlignEnabled true
+
+            applicationVariants.all { variant ->
+                variant.outputs.each  { output ->
+                    output.outputFile = new File(output.outputFile.parent, output.outputFile.name.replace(".apk", "-" + defaultConfig.versionName + ".apk"))
+                }
+            }
         }
     }
 }
@@ -22,4 +37,14 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
+}
+
+task('increaseVersionCode') << {
+    getVersionCode(module.name + "/src/main/AndroidManifest.xml", true)
+}
+
+tasks.whenTaskAdded { task ->
+    if (task.name == 'generateReleaseBuildConfig' || task.name == 'generateDebugBuildConfig') {
+        task.dependsOn 'increaseVersionCode'
+    }
 }
