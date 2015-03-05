@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
+apply plugin: 'org.robolectric'
 
-version = "0.0.1"
+version = "0.0.2"
 
 android {
     compileSdkVersion 21
@@ -21,12 +22,12 @@ android {
 
         release {
             debuggable false
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             zipAlignEnabled true
 
             applicationVariants.all { variant ->
-                variant.outputs.each  { output ->
+                variant.outputs.each { output ->
                     output.outputFile = new File(output.outputFile.parent, output.outputFile.name.replace(".apk", "-" + defaultConfig.versionName + ".apk"))
                 }
             }
@@ -36,7 +37,14 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
     compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.android.support:recyclerview-v7:21.0.3'
+    compile 'com.android.support:cardview-v7:21.0.3'
+    compile 'commons-io:commons-io:2.4'
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.robolectric:robolectric:2.4'
 }
 
 task('increaseVersionCode') << {

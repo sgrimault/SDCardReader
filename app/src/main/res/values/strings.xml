@@ -1,4 +1,11 @@
 <resources>
+
     <string name="app_name">SDCardReader</string>
     <string name="no_data">No data</string>
+
+    <string name="storage_size_b">%1.0f B</string>
+    <string name="storage_size_kb">%1.1f kB</string>
+    <string name="storage_size_mb">%1.1f MB</string>
+    <string name="storage_size_gb">%1.1f GB</string>
+
 </resources>

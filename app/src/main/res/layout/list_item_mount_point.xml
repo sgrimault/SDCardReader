@@ -3,34 +3,65 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
                 android:minHeight="?android:attr/listPreferredItemHeight"
-                android:paddingTop="8dp">
+                android:padding="8dp">
 
     <ImageView
-        android:id="@android:id/icon"
+        android:id="@+id/imageViewStorageType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_action_device_sd_storage"
         tools:ignore="ContentDescription"/>
 
     <TextView
-        android:id="@android:id/text1"
+        android:id="@+id/textViewStoragePath"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@android:id/icon"
+        android:layout_toRightOf="@id/imageViewStorageType"
         android:text="/mnt/sdcard"
         android:textAppearance="?android:attr/textAppearanceMedium"
         tools:ignore="HardcodedText,RtlHardcoded"/>
 
     <TextView
-        android:id="@android:id/text2"
+        android:id="@+id/textViewStorageStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@android:id/text1"
-        android:layout_below="@android:id/text1"
+        android:layout_alignLeft="@id/textViewStoragePath"
+        android:layout_below="@id/textViewStoragePath"
         android:text="mounted"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textStyle="italic"
         tools:ignore="HardcodedText,RtlHardcoded"/>
+
+    <TextView
+        android:id="@+id/textViewStorageSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewStorageStatus"
+        android:layout_toRightOf="@id/imageViewStorageType"
+        android:text="1GB / 5 GB"
+        tools:ignore="HardcodedText,RtlHardcoded"/>
+
+    <TextView
+        android:id="@+id/textViewStorageUsed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/textViewStorageStatus"
+        android:text="20%"
+        tools:ignore="HardcodedText,RtlHardcoded"/>
+
+    <ProgressBar
+        android:id="@+id/progressBarStorageUsed"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewStorageSize"
+        android:layout_toRightOf="@id/imageViewStorageType"
+        android:indeterminate="false"
+        android:max="100"
+        android:progress="20"
+        tools:ignore="RtlHardcoded"/>
 
 </RelativeLayout>

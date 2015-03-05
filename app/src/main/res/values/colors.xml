@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="mount_point_mounted">#32CD32</color>
+    <color name="mount_point_mounted_ro">#FF7F00</color>
+    <color name="mount_point_unmounted">#F00</color>
+</resources>

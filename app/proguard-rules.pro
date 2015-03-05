@@ -15,3 +15,13 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-keepattributes **
+
+-dontobfuscate
+-dontoptimize
+
+# Allow obfuscation of android.support.v7.internal.view.menu.** to avoid problem on some devices
+# (like Samsung 4.2.2) with AppCompat v21
+# see https://code.google.com/p/android/issues/detail?id=78377
+-keep class !android.support.v7.internal.view.menu.**, android.support.** {*;}

@@ -3,12 +3,15 @@ package sc.sn.sdcardreader.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.File;
+
 /**
  * Describes a mount point storage.
  *
- * @author <a href="mailto:sebastien.grimault@makina-corpus.com">S. Grimault</a>
+ * @author S. Grimault
  */
-public class MountPoint implements Parcelable {
+public class MountPoint
+        implements Parcelable {
 
     private final String mountPath;
     private final String storageState;
@@ -39,6 +42,14 @@ public class MountPoint implements Parcelable {
 
     public StorageType getStorageType() {
         return storageType;
+    }
+
+    public long getTotalSpace() {
+        return new File(mountPath).getTotalSpace();
+    }
+
+    public long getFreeSpace() {
+        return new File(mountPath).getFreeSpace();
     }
 
     @Override
