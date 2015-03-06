@@ -6,7 +6,6 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Environment;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +16,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import sc.sn.sdcardreader.R;
 import sc.sn.sdcardreader.model.MountPoint;
@@ -31,11 +27,10 @@ import sc.sn.sdcardreader.util.MountPointUtils;
  * @author S. Grimault
  */
 public class MountPointAdapter
-        extends RecyclerView.Adapter<MountPointAdapter.ViewHolder> {
+        extends AbstractListAdapter<MountPoint, MountPointAdapter.ViewHolder> {
 
     private final Context mContext;
     private final OnMountPointItemListener mOnMountPointItemListener;
-    private final List<MountPoint> mMountPoints = new ArrayList<>();
 
     public MountPointAdapter(Context pContext, OnMountPointItemListener pOnMountPointItemListener) {
         this.mContext = pContext;
@@ -57,35 +52,7 @@ public class MountPointAdapter
     public void onBindViewHolder(
             ViewHolder holder,
             int position) {
-        holder.bindMountPoint(mMountPoints.get(position));
-    }
-
-    @Override
-    public int getItemCount() {
-        return mMountPoints.size();
-    }
-
-    public void clear() {
-        mMountPoints.clear();
-        notifyDataSetChanged();
-    }
-
-    public void addAll(@NonNull final Collection<MountPoint> mountPoints) {
-        mMountPoints.addAll(mountPoints);
-        notifyDataSetChanged();
-    }
-
-    /**
-     * Get the {@link sc.sn.sdcardreader.model.MountPoint} associated with the specified position in
-     * the data set.
-     *
-     * @param position position of the item whose data we want within this {@link sc.sn.sdcardreader.ui.adapter.MountPointAdapter}
-     *                 data set.
-     *
-     * @return the {@link sc.sn.sdcardreader.model.MountPoint} at the specified position
-     */
-    public MountPoint getItem(int position) {
-        return mMountPoints.get(position);
+        holder.bind(getItem(position));
     }
 
     /**
@@ -114,9 +81,9 @@ public class MountPointAdapter
             mProgressBarStorageUsed = (ProgressBar) itemView.findViewById(R.id.progressBarStorageUsed);
         }
 
-        public void bindMountPoint(final MountPoint mountPoint) {
+        public void bind(final MountPoint mountPoint) {
             mTextViewStoragePath.setText(mountPoint.getMountPath());
-            mTextViewStorageStatus.setText(mountPoint.getStorageState());
+            mTextViewStorageStatus.setText(MountPointUtils.formatStorageStatus(mContext, mountPoint.getStorageState()));
 
             mProgressBarStorageUsed.setProgress(0);
             mProgressBarStorageUsed.setMax(100);
@@ -221,7 +188,6 @@ public class MountPointAdapter
                 itemView.setOnClickListener(null);
             }
 
-            //itemView.setClickable(enabled);
             itemView.setEnabled(enabled);
         }
     }

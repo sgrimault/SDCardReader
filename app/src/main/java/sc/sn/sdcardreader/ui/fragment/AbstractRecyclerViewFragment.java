@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 import sc.sn.sdcardreader.R;
 
@@ -19,8 +20,9 @@ import sc.sn.sdcardreader.R;
  */
 public abstract class AbstractRecyclerViewFragment extends Fragment {
 
-    private View mProgressView;
     private RecyclerView mRecyclerView;
+    private View mProgressView;
+    private TextView mTextViewEmpty;
 
     @Override
     public View onCreateView(
@@ -37,12 +39,13 @@ public abstract class AbstractRecyclerViewFragment extends Fragment {
             @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mProgressView = view.findViewById(android.R.id.progress);
-
         mRecyclerView = (RecyclerView) view.findViewById(android.R.id.list);
         mRecyclerView.setHasFixedSize(true);
         // use a linear layout manager as default layout manager
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        mProgressView = view.findViewById(android.R.id.progress);
+        mTextViewEmpty = (TextView) view.findViewById(android.R.id.message);
     }
 
     public RecyclerView getRecyclerView() {
@@ -54,7 +57,7 @@ public abstract class AbstractRecyclerViewFragment extends Fragment {
 
         if (adapter != null) {
             // start out with a progress indicator
-            setListShown(false);
+            showProgressBar(true);
 
             adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
 
@@ -62,41 +65,57 @@ public abstract class AbstractRecyclerViewFragment extends Fragment {
                 public void onChanged() {
                     super.onChanged();
 
-                    setListShown(true);
+                    showProgressBar(false);
+                    showEmptyText(mRecyclerView.getAdapter().getItemCount() == 0);
+                }
+
+                @Override
+                public void onItemRangeInserted(
+                        int positionStart,
+                        int itemCount) {
+                    super.onItemRangeInserted(positionStart,
+                                              itemCount);
+                    showProgressBar(false);
+                    showEmptyText(false);
                 }
             });
         }
     }
 
-    private void setListShown(boolean shown) {
-        setListShown(shown,
-                     true);
+    public void setEmptyText(CharSequence message) {
+        mTextViewEmpty.setText(message);
     }
 
-    private void setListShown(
-            boolean shown,
-            boolean animate) {
-        if ((mRecyclerView.getVisibility() == View.VISIBLE) == shown) {
+    public void showProgressBar(boolean show) {
+        if ((mProgressView.getVisibility() == View.VISIBLE) == show) {
             return;
         }
 
-        if (shown) {
-            if (animate) {
-                mProgressView.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
-                mRecyclerView.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
-            }
+        if (show) {
+            mTextViewEmpty.setVisibility(View.GONE);
+            mProgressView.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
+            mProgressView.setVisibility(View.VISIBLE);
 
-            mProgressView.setVisibility(View.GONE);
-            mRecyclerView.setVisibility(View.VISIBLE);
         }
         else {
-            if (animate) {
-                mProgressView.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
-                mRecyclerView.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
-            }
+            mProgressView.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
+            mProgressView.setVisibility(View.GONE);
+        }
+    }
 
-            mProgressView.setVisibility(View.VISIBLE);
-            mRecyclerView.setVisibility(View.INVISIBLE);
+    private void showEmptyText(boolean show) {
+        if ((mTextViewEmpty.getVisibility() == View.VISIBLE) == show) {
+            return;
+        }
+
+        if (show) {
+            mTextViewEmpty.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
+            mTextViewEmpty.setVisibility(View.VISIBLE);
+
+        }
+        else {
+            mTextViewEmpty.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
+            mTextViewEmpty.setVisibility(View.GONE);
         }
     }
 }

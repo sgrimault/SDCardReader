@@ -1,6 +1,5 @@
 package sc.sn.sdcardreader.ui.adapter;
 
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,9 +7,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import sc.sn.sdcardreader.R;
 
@@ -19,9 +15,14 @@ import sc.sn.sdcardreader.R;
  *
  * @author S. Grimault
  */
-public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
+public class FileListAdapter
+        extends AbstractListAdapter<File, FileListAdapter.ViewHolder> {
 
-    private final List<File> mFiles = new ArrayList<>();
+    private final OnFileItemListener mOnFileItemListener;
+
+    public FileListAdapter(OnFileItemListener pOnFileItemListener) {
+        this.mOnFileItemListener = pOnFileItemListener;
+    }
 
     @Override
     public ViewHolder onCreateViewHolder(
@@ -30,7 +31,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         // create a new ViewHolder
         return new ViewHolder(
                 LayoutInflater.from(parent.getContext())
-                              .inflate(android.R.layout.simple_list_item_1,
+                              .inflate(R.layout.list_item_file,
                                        parent,
                                        false));
     }
@@ -39,26 +40,11 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
     public void onBindViewHolder(
             ViewHolder holder,
             int position) {
-        holder.bindFile(mFiles.get(position));
-    }
-
-    @Override
-    public int getItemCount() {
-        return mFiles.size();
-    }
-
-    public void clear() {
-        mFiles.clear();
-        notifyDataSetChanged();
-    }
-
-    public void addAll(@NonNull final Collection<File> files) {
-        mFiles.addAll(files);
-        notifyDataSetChanged();
+        holder.bind(getItem(position));
     }
 
     /**
-     * Default {@code ViewHolder} used by {@link sc.sn.sdcardreader.ui.adapter.FileAdapter}.
+     * Default {@code ViewHolder} used by {@link FileListAdapter}.
      *
      * @author S. Grimault
      */
@@ -72,7 +58,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
             mTextViewFileName = (TextView) itemView.findViewById(android.R.id.text1);
         }
 
-        public void bindFile(final File file) {
+        public void bind(final File file) {
             mTextViewFileName.setText(file.getName());
 
             if (file.isDirectory()) {
@@ -81,6 +67,27 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
             else {
                 mTextViewFileName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_file, 0, 0, 0);
             }
+
+            if (mOnFileItemListener != null) {
+                itemView.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        mOnFileItemListener.onFileSelected(file);
+                    }
+                });
+            }
         }
+    }
+
+    /**
+     * Interface definition for a callback to be invoked when an item in the {@code RecyclerView}
+     * has been clicked.
+     *
+     * @author S. Grimault
+     */
+    public interface OnFileItemListener {
+
+        public void onFileSelected(File file);
     }
 }

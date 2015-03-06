@@ -19,7 +19,7 @@ import sc.sn.sdcardreader.R;
 import sc.sn.sdcardreader.model.MountPoint;
 
 /**
- * Class helper about {@code File} and {@link sc.sn.sdcardreader.model.MountPoint}.
+ * Class helper about {@link sc.sn.sdcardreader.model.MountPoint}.
  *
  * @author S. Grimault
  */
@@ -105,7 +105,8 @@ public class MountPointUtils {
     /**
      * Pretty format a storage size.
      *
-     * @param storageSize the the storage size in bytes to format
+     * @param context     the current context
+     * @param storageSize the storage size in bytes to format
      *
      * @return a human representation of the storage size
      */
@@ -144,6 +145,26 @@ public class MountPointUtils {
                 stringResource,
                 formatedStorageSize
         );
+    }
+
+    /**
+     * Pretty format the storage status.
+     *
+     * @param context the current context
+     * @param status  the storage status
+     *
+     * @return a human representation of the storage status
+     */
+    public static String formatStorageStatus(Context context, @NonNull final String status) {
+        int stringResource = context.getResources().getIdentifier("storage_status_" + status,
+                                                                  "string",
+                                                                  context.getPackageName());
+
+        if (stringResource == 0) {
+            return context.getString(R.string.storage_status_unmounted);
+        }
+
+        return context.getString(stringResource);
     }
 
     /**

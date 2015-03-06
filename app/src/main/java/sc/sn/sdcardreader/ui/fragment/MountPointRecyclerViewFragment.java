@@ -12,12 +12,12 @@ import java.util.List;
 import sc.sn.sdcardreader.loader.MountPointLoader;
 import sc.sn.sdcardreader.model.MountPoint;
 import sc.sn.sdcardreader.ui.adapter.MountPointAdapter;
+import sc.sn.sdcardreader.ui.widget.recyclerview.SlideInOutBottomItemAnimator;
 
 /**
- * A {@code Fragment} representing a list of {@link sc.sn.sdcardreader.model.MountPoint}s.
+ * A {@code Fragment} representing a {@code List} of {@link sc.sn.sdcardreader.model.MountPoint}s.
  * <p/>
- * <p/>
- * Activities containing this fragment MUST implement the {@link sc.sn.sdcardreader.ui.fragment.MountPointRecyclerViewFragment.OnMountPointRecyclerViewFragmentListener}
+ * Activities containing this {@code Fragment} MUST implement the {@link sc.sn.sdcardreader.ui.fragment.MountPointRecyclerViewFragment.OnMountPointRecyclerViewFragmentListener}
  * interface.
  *
  * @author S. Grimault
@@ -96,6 +96,9 @@ public class MountPointRecyclerViewFragment extends AbstractRecyclerViewFragment
         super.onViewCreated(view, savedInstanceState);
 
         setRecyclerViewAdapter(mMountPointAdapter);
+        getRecyclerView().setItemAnimator(new SlideInOutBottomItemAnimator(getRecyclerView()));
+        getRecyclerView().getItemAnimator().setAddDuration(500);
+        getRecyclerView().getItemAnimator().setChangeDuration(500);
     }
 
     @Override

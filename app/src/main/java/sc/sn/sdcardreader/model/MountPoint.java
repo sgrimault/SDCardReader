@@ -44,10 +44,24 @@ public class MountPoint
         return storageType;
     }
 
+    /**
+     * Returns the total size in bytes of the partition containing this path.
+     *
+     * @return the total size in bytes of the partition containing this path or 0 if this path does not exist
+     *
+     * @see java.io.File#getTotalSpace()
+     */
     public long getTotalSpace() {
         return new File(mountPath).getTotalSpace();
     }
 
+    /**
+     * Returns the number of free bytes on the partition containing this path.
+     *
+     * @return the number of free bytes on the partition containing this path or 0 if this path does not exist
+     *
+     * @see java.io.File#getFreeSpace()
+     */
     public long getFreeSpace() {
         return new File(mountPath).getFreeSpace();
     }
@@ -69,7 +83,7 @@ public class MountPoint
     /**
      * Describes a storage type.
      *
-     * @author <a href="mailto:sebastien.grimault@makina-corpus.com">S. Grimault</a>
+     * @author S. Grimault
      */
     public enum StorageType {
         /**
