@@ -2,7 +2,7 @@
 <manifest
     package="sc.sn.sdcardreader"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:versionCode="184">
+    android:versionCode="190">
 
     <uses-permission android:name="android.permission.STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>

@@ -15,12 +15,22 @@ android {
         buildConfigField "String", "BUILD_DATE", "\"" + new Date().getTime() + "\""
     }
 
+    signingConfigs {
+        release {
+            storeFile file("../" + STORE_FILE)
+            storePassword STORE_PASSWORD
+            keyAlias KEY_ALIAS
+            keyPassword KEY_PASSWORD
+        }
+    }
+
     buildTypes {
         debug {
             versionNameSuffix "-DEV"
         }
 
         release {
+            signingConfig signingConfigs.release
             debuggable false
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
