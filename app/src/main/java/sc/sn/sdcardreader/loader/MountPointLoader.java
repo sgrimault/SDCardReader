@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.util.List;
 
+import sc.sn.android.commons.loader.AbstractAsyncTaskLoader;
 import sc.sn.sdcardreader.model.MountPoint;
 import sc.sn.sdcardreader.util.MountPointUtils;
 
@@ -12,7 +13,8 @@ import sc.sn.sdcardreader.util.MountPointUtils;
  *
  * @author S. Grimault
  */
-public class MountPointLoader extends AbstractAsyncTaskLoader<List<MountPoint>> {
+public class MountPointLoader
+        extends AbstractAsyncTaskLoader<List<MountPoint>> {
 
     public MountPointLoader(Context context) {
         super(context);

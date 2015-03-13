@@ -1,4 +1,4 @@
-package sc.sn.sdcardreader.loader;
+package sc.sn.android.commons.loader;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
@@ -8,7 +8,8 @@ import android.support.v4.content.AsyncTaskLoader;
  *
  * S. Grimault
  */
-public abstract class AbstractAsyncTaskLoader<D> extends AsyncTaskLoader<D> {
+public abstract class AbstractAsyncTaskLoader<D>
+        extends AsyncTaskLoader<D> {
 
     D result;
 

@@ -1,6 +1,8 @@
 package sc.sn.sdcardreader.ui.adapter;
 
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,7 @@ import android.widget.TextView;
 
 import java.io.File;
 
+import sc.sn.android.commons.ui.adapter.AbstractListAdapter;
 import sc.sn.sdcardreader.R;
 
 /**
@@ -30,10 +33,14 @@ public class FileListAdapter
             int viewType) {
         // create a new ViewHolder
         return new ViewHolder(
+                parent,
                 LayoutInflater.from(parent.getContext())
-                              .inflate(R.layout.list_item_file,
-                                       parent,
-                                       false));
+                              .inflate(
+                                      R.layout.list_item_file,
+                                      parent,
+                                      false
+                              )
+        );
     }
 
     @Override
@@ -50,22 +57,59 @@ public class FileListAdapter
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public final TextView mTextViewFileName;
+        private final RecyclerView mRecyclerView;
+        private final TextView mTextViewFileName;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(ViewGroup parent, View itemView) {
             super(itemView);
 
+            mRecyclerView = (RecyclerView) parent;
             mTextViewFileName = (TextView) itemView.findViewById(android.R.id.text1);
         }
 
         public void bind(final File file) {
             mTextViewFileName.setText(file.getName());
+            int spanCount = getSpanCountFromLayoutManager();
 
             if (file.isDirectory()) {
-                mTextViewFileName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_file_folder, 0, 0, 0);
+                if (spanCount > 1) {
+                    mTextViewFileName.setCompoundDrawablesWithIntrinsicBounds(
+                            0,
+                            R.drawable.ic_action_file_folder,
+                            0,
+                            0
+                    );
+                    mTextViewFileName.setGravity(Gravity.CENTER);
+                }
+                else {
+                    mTextViewFileName.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.ic_action_file_folder,
+                            0,
+                            0,
+                            0
+                    );
+                    mTextViewFileName.setGravity(Gravity.CENTER_VERTICAL);
+                }
             }
             else {
-                mTextViewFileName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_file, 0, 0, 0);
+                if (spanCount > 1) {
+                    mTextViewFileName.setCompoundDrawablesWithIntrinsicBounds(
+                            0,
+                            R.drawable.ic_action_file,
+                            0,
+                            0
+                    );
+                    mTextViewFileName.setGravity(Gravity.CENTER);
+                }
+                else {
+                    mTextViewFileName.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.ic_action_file,
+                            0,
+                            0,
+                            0
+                    );
+                    mTextViewFileName.setGravity(Gravity.CENTER_VERTICAL);
+                }
             }
 
             if (mOnFileItemListener != null) {
@@ -77,6 +121,10 @@ public class FileListAdapter
                     }
                 });
             }
+        }
+
+        private int getSpanCountFromLayoutManager() {
+            return (mRecyclerView.getLayoutManager() instanceof GridLayoutManager) ? ((GridLayoutManager) mRecyclerView.getLayoutManager()).getSpanCount() : GridLayoutManager.DEFAULT_SPAN_COUNT;
         }
     }
 

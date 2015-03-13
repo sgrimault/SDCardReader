@@ -1,4 +1,4 @@
-package sc.sn.sdcardreader.ui.fragment;
+package sc.sn.android.commons.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,18 +11,19 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
-import sc.sn.sdcardreader.R;
+import sc.sn.android.commons.R;
 
 /**
  * Base {@code Fragment} about {@code RecyclerView}.
  *
  * @author S. Grimault
  */
-public abstract class AbstractRecyclerViewFragment extends Fragment {
+public class RecyclerViewFragment
+        extends Fragment {
 
-    private RecyclerView mRecyclerView;
-    private View mProgressView;
-    private TextView mTextViewEmpty;
+    protected RecyclerView mRecyclerView;
+    protected View mProgressView;
+    protected TextView mTextViewEmpty;
 
     @Override
     public View onCreateView(
@@ -30,7 +31,11 @@ public abstract class AbstractRecyclerViewFragment extends Fragment {
             ViewGroup container,
             Bundle savedInstanceState) {
         // inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        return inflater.inflate(
+                R.layout.fragment_recycler_view,
+                container,
+                false
+        );
     }
 
     @Override
@@ -59,26 +64,34 @@ public abstract class AbstractRecyclerViewFragment extends Fragment {
             // start out with a progress indicator
             showProgressBar(true);
 
-            adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            adapter.registerAdapterDataObserver(
+                    new RecyclerView.AdapterDataObserver() {
 
-                @Override
-                public void onChanged() {
-                    super.onChanged();
+                        @Override
+                        public void onChanged() {
+                            super.onChanged();
 
-                    showProgressBar(false);
-                    showEmptyText(mRecyclerView.getAdapter().getItemCount() == 0);
-                }
+                            showProgressBar(false);
+                            showEmptyText(
+                                    mRecyclerView.getAdapter()
+                                                 .getItemCount() == 0
+                            );
+                        }
 
-                @Override
-                public void onItemRangeInserted(
-                        int positionStart,
-                        int itemCount) {
-                    super.onItemRangeInserted(positionStart,
-                                              itemCount);
-                    showProgressBar(false);
-                    showEmptyText(false);
-                }
-            });
+                        @Override
+                        public void onItemRangeInserted(
+                                int positionStart,
+                                int itemCount) {
+                            super.onItemRangeInserted(
+                                    positionStart,
+                                    itemCount
+                            );
+
+                            showProgressBar(false);
+                            showEmptyText(false);
+                        }
+                    }
+            );
         }
     }
 
@@ -93,12 +106,22 @@ public abstract class AbstractRecyclerViewFragment extends Fragment {
 
         if (show) {
             mTextViewEmpty.setVisibility(View.GONE);
-            mProgressView.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
+            mProgressView.startAnimation(
+                    AnimationUtils.loadAnimation(
+                            getActivity(),
+                            android.R.anim.fade_in
+                    )
+            );
             mProgressView.setVisibility(View.VISIBLE);
 
         }
         else {
-            mProgressView.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
+            mProgressView.startAnimation(
+                    AnimationUtils.loadAnimation(
+                            getActivity(),
+                            android.R.anim.fade_out
+                    )
+            );
             mProgressView.setVisibility(View.GONE);
         }
     }
@@ -109,12 +132,22 @@ public abstract class AbstractRecyclerViewFragment extends Fragment {
         }
 
         if (show) {
-            mTextViewEmpty.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
+            mTextViewEmpty.startAnimation(
+                    AnimationUtils.loadAnimation(
+                            getActivity(),
+                            android.R.anim.fade_in
+                    )
+            );
             mTextViewEmpty.setVisibility(View.VISIBLE);
 
         }
         else {
-            mTextViewEmpty.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
+            mTextViewEmpty.startAnimation(
+                    AnimationUtils.loadAnimation(
+                            getActivity(),
+                            android.R.anim.fade_out
+                    )
+            );
             mTextViewEmpty.setVisibility(View.GONE);
         }
     }

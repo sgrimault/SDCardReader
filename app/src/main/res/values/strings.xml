@@ -1,7 +1,6 @@
 <resources>
 
     <string name="app_name">SDCardReader</string>
-    <string name="no_data">No data</string>
 
     <string name="storage_status_mounted">mounted (rw)</string>
     <string name="storage_status_mounted_ro">mounted (ro)</string>
@@ -12,5 +11,9 @@
     <string name="storage_size_gb">%1.1f GB</string>
 
     <string name="file_no_data">Folder empty</string>
+
+    <string name="menu_item_view_mode">Show items as %1$s</string>
+    <string name="view_list">list</string>
+    <string name="view_grid">grid</string>
 
 </resources>

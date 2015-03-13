@@ -1,4 +1,4 @@
-package sc.sn.sdcardreader.ui.widget.recyclerview;
+package sc.sn.android.commons.ui.recyclerview;
 
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorCompat;
@@ -9,7 +9,7 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-import sc.sn.sdcardreader.BuildConfig;
+import sc.sn.android.commons.BuildConfig;
 
 /**
  * Copyright (C) 2014 The Android Open Source Project
@@ -26,22 +26,22 @@ import sc.sn.sdcardreader.BuildConfig;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public abstract class AbstractItemAnimator extends RecyclerView.ItemAnimator {
+public abstract class AbstractItemAnimator
+        extends RecyclerView.ItemAnimator {
 
-    private ArrayList<RecyclerView.ViewHolder> mPendingRemovals = new ArrayList<>();
-    private ArrayList<RecyclerView.ViewHolder> mPendingAdditions = new ArrayList<>();
-    private ArrayList<MoveInfo> mPendingMoves = new ArrayList<>();
-    private ArrayList<ChangeInfo> mPendingChanges = new ArrayList<>();
+    private final ArrayList<RecyclerView.ViewHolder> mPendingRemovals = new ArrayList<>();
+    private final ArrayList<RecyclerView.ViewHolder> mPendingAdditions = new ArrayList<>();
+    private final ArrayList<MoveInfo> mPendingMoves = new ArrayList<>();
+    private final ArrayList<ChangeInfo> mPendingChanges = new ArrayList<>();
 
-    private ArrayList<ArrayList<RecyclerView.ViewHolder>> mAdditionsList =
-            new ArrayList<>();
-    private ArrayList<ArrayList<MoveInfo>> mMovesList = new ArrayList<>();
-    private ArrayList<ArrayList<ChangeInfo>> mChangesList = new ArrayList<>();
+    private final ArrayList<ArrayList<RecyclerView.ViewHolder>> mAdditionsList = new ArrayList<>();
+    private final ArrayList<ArrayList<MoveInfo>> mMovesList = new ArrayList<>();
+    private final ArrayList<ArrayList<ChangeInfo>> mChangesList = new ArrayList<>();
 
-    protected ArrayList<RecyclerView.ViewHolder> mAddAnimations = new ArrayList<>();
-    private ArrayList<RecyclerView.ViewHolder> mMoveAnimations = new ArrayList<>();
-    protected ArrayList<RecyclerView.ViewHolder> mRemoveAnimations = new ArrayList<>();
-    private ArrayList<RecyclerView.ViewHolder> mChangeAnimations = new ArrayList<>();
+    protected final ArrayList<RecyclerView.ViewHolder> mAddAnimations = new ArrayList<>();
+    private final ArrayList<RecyclerView.ViewHolder> mMoveAnimations = new ArrayList<>();
+    protected final ArrayList<RecyclerView.ViewHolder> mRemoveAnimations = new ArrayList<>();
+    private final ArrayList<RecyclerView.ViewHolder> mChangeAnimations = new ArrayList<>();
 
     protected RecyclerView mRecyclerView;
 

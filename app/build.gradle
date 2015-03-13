@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
-apply plugin: 'org.robolectric'
+apply plugin: 'jacoco'
 
-version = "0.0.3"
+version = "0.0.4"
 
 android {
     compileSdkVersion 21
@@ -11,6 +11,7 @@ android {
         applicationId "sc.sn.sdcardreader"
         minSdkVersion 10
         targetSdkVersion 21
+        versionCode updateVersionCode(module.name)
         versionName version
         buildConfigField "String", "BUILD_DATE", "\"" + new Date().getTime() + "\""
     }
@@ -27,6 +28,7 @@ android {
     buildTypes {
         debug {
             versionNameSuffix "-DEV"
+            debuggable true
         }
 
         release {
@@ -48,20 +50,32 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
+    compile project(':commons')
+
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:recyclerview-v7:21.0.3'
     compile 'com.android.support:cardview-v7:21.0.3'
 
     testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:1.10.19'
     testCompile 'org.robolectric:robolectric:2.4'
 }
 
-task('increaseVersionCode') << {
-    getVersionCode(module.name + "/src/main/AndroidManifest.xml", true)
-}
+task generateJacocoTestReports(type: JacocoReport, dependsOn: "testDebug") {
+    group = "Reporting"
 
-tasks.whenTaskAdded { task ->
-    if (task.name == 'generateReleaseBuildConfig' || task.name == 'generateDebugBuildConfig') {
-        task.dependsOn 'increaseVersionCode'
-    }
+    description = "Generate Jacoco Robolectric unit test coverage reports"
+
+    classDirectories = fileTree(
+            dir: '../app/build/intermediates/classes/debug',
+            excludes: ['**/R.class',
+                       '**/R$*.class',
+                       '**/*$ViewInjector*.*',
+                       '**/BuildConfig.*',
+                       '**/Manifest*.*']
+    )
+
+    sourceDirectories = files('../app/src/main/java')
+    additionalSourceDirs = files('../app/src/main/java')
+    executionData = files('../app/build/jacoco/testDebug.exec')
 }

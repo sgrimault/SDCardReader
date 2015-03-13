@@ -29,8 +29,10 @@ public class MainActivity
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                                       .add(R.id.container,
-                                            MountPointRecyclerViewFragment.newInstance())
+                                       .add(
+                                               R.id.container,
+                                               MountPointRecyclerViewFragment.newInstance()
+                                       )
                                        .commit();
         }
     }
@@ -43,10 +45,13 @@ public class MainActivity
                         R.anim.fragment_enter_slide_left,
                         R.anim.fragment_exit_slide_left,
                         R.anim.fragment_pop_enter_slide_right,
-                        R.anim.fragment_pop_exit_slide_right)
-                .replace(R.id.container,
-                         FileRecyclerViewFragment.newInstance(new File(mountPoint.getMountPath())),
-                         FileRecyclerViewFragment.class.getName())
+                        R.anim.fragment_pop_exit_slide_right
+                )
+                .replace(
+                        R.id.container,
+                        FileRecyclerViewFragment.newInstance(new File(mountPoint.getMountPath())),
+                        FileRecyclerViewFragment.class.getName()
+                )
                 .addToBackStack(null)
                 .commit();
     }
@@ -60,17 +65,21 @@ public class MainActivity
                             R.anim.fragment_enter_slide_left,
                             R.anim.fragment_exit_slide_left,
                             R.anim.fragment_pop_enter_slide_right,
-                            R.anim.fragment_pop_exit_slide_right)
-                    .replace(R.id.container,
-                             FileRecyclerViewFragment.newInstance(file),
-                             FileRecyclerViewFragment.class.getName())
+                            R.anim.fragment_pop_exit_slide_right
+                    )
+                    .replace(
+                            R.id.container,
+                            FileRecyclerViewFragment.newInstance(file),
+                            FileRecyclerViewFragment.class.getName()
+                    )
                     .addToBackStack(null)
                     .commit();
         }
         else {
-            Toast.makeText(this,
-                           file.getPath(),
-                           Toast.LENGTH_SHORT
+            Toast.makeText(
+                    this,
+                    file.getPath(),
+                    Toast.LENGTH_SHORT
             ).show();
         }
     }

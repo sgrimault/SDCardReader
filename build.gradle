@@ -6,7 +6,6 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.1.0'
-        classpath 'org.robolectric:robolectric-gradle-plugin:1.0.1'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -19,27 +18,28 @@ allprojects {
     }
 }
 
-import java.util.regex.Pattern
+def int updateVersionCode(moduleName) {
+    def versionPropsFile = file(moduleName + '/version.properties')
 
-def getVersionCode(manifestLocation, increment = false) {
-    def manifestFile = file(manifestLocation)
+    println("getVersionCode: loading '" + versionPropsFile + "'")
 
-    if (!manifestFile.exists()) {
-        println 'getVersionCode, no such file: ' + manifestLocation
-
-        return -1
+    if (!versionPropsFile.exists()) {
+        versionPropsFile.createNewFile()
     }
 
-    def pattern = Pattern.compile("versionCode=\"(\\d+)\"")
-    def manifestText = manifestFile.getText()
-    def matcher = pattern.matcher(manifestText)
-    matcher.find()
-    def versionCode = Integer.parseInt(matcher.group(1))
+    def Properties versionProps = new Properties()
+    versionProps.load(new FileInputStream(versionPropsFile))
 
-    if (increment) {
-        def manifestContent = matcher.replaceAll("versionCode=\"" + ++versionCode + "\"")
-        manifestFile.write(manifestContent)
+    def versionCode = 1
+
+    if (versionProps['VERSION_CODE'] != null) {
+        versionCode = Integer.parseInt(versionProps['VERSION_CODE'].toString()).intValue() + 1;
     }
 
-    return versionCode
+    versionProps['VERSION_CODE'] = versionCode.toString()
+    versionProps.store(versionPropsFile.newWriter(), null)
+
+    println("getVersionCode: " + versionCode)
+
+    return versionCode;
 }

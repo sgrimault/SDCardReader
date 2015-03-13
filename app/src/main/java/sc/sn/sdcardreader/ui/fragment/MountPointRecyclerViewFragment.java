@@ -9,10 +9,11 @@ import android.view.View;
 
 import java.util.List;
 
+import sc.sn.android.commons.ui.fragment.RecyclerViewFragment;
+import sc.sn.android.commons.ui.recyclerview.SlideInOutBottomItemAnimator;
 import sc.sn.sdcardreader.loader.MountPointLoader;
 import sc.sn.sdcardreader.model.MountPoint;
 import sc.sn.sdcardreader.ui.adapter.MountPointAdapter;
-import sc.sn.sdcardreader.ui.widget.recyclerview.SlideInOutBottomItemAnimator;
 
 /**
  * A {@code Fragment} representing a {@code List} of {@link sc.sn.sdcardreader.model.MountPoint}s.
@@ -22,7 +23,8 @@ import sc.sn.sdcardreader.ui.widget.recyclerview.SlideInOutBottomItemAnimator;
  *
  * @author S. Grimault
  */
-public class MountPointRecyclerViewFragment extends AbstractRecyclerViewFragment {
+public class MountPointRecyclerViewFragment
+        extends RecyclerViewFragment {
 
     private static final int LOADER_MOUNT_POINT = 0;
 
@@ -30,7 +32,7 @@ public class MountPointRecyclerViewFragment extends AbstractRecyclerViewFragment
 
     private OnMountPointRecyclerViewFragmentListener mOnMountPointRecyclerViewFragmentListener;
 
-    private MountPointAdapter.OnMountPointItemListener mOnMountPointItemListener = new MountPointAdapter.OnMountPointItemListener() {
+    private final MountPointAdapter.OnMountPointItemListener mOnMountPointItemListener = new MountPointAdapter.OnMountPointItemListener() {
 
         @Override
         public void onMountPointSelected(MountPoint mountPoint) {
@@ -40,7 +42,7 @@ public class MountPointRecyclerViewFragment extends AbstractRecyclerViewFragment
         }
     };
 
-    private LoaderManager.LoaderCallbacks<List<MountPoint>> mMountPointLoaderCallbacks = new LoaderManager.LoaderCallbacks<List<MountPoint>>() {
+    private final LoaderManager.LoaderCallbacks<List<MountPoint>> mMountPointLoaderCallbacks = new LoaderManager.LoaderCallbacks<List<MountPoint>>() {
 
         @Override
         public Loader<List<MountPoint>> onCreateLoader(
@@ -86,7 +88,10 @@ public class MountPointRecyclerViewFragment extends AbstractRecyclerViewFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mMountPointAdapter = new MountPointAdapter(getActivity(), mOnMountPointItemListener);
+        mMountPointAdapter = new MountPointAdapter(
+                getActivity(),
+                mOnMountPointItemListener
+        );
     }
 
     @Override
@@ -105,9 +110,11 @@ public class MountPointRecyclerViewFragment extends AbstractRecyclerViewFragment
     public void onResume() {
         super.onResume();
 
-        getLoaderManager().initLoader(LOADER_MOUNT_POINT,
-                                      getArguments(),
-                                      mMountPointLoaderCallbacks);
+        getLoaderManager().initLoader(
+                LOADER_MOUNT_POINT,
+                getArguments(),
+                mMountPointLoaderCallbacks
+        );
     }
 
     @Override

@@ -8,19 +8,22 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import sc.sn.android.commons.loader.AbstractAsyncTaskLoader;
+
 /**
  * Default {@code Loader} about {@code File}s.
  *
  * S. Grimault
  */
-public class FileLoader extends AbstractAsyncTaskLoader<List<File>> {
+public class FileLoader
+        extends AbstractAsyncTaskLoader<List<File>> {
 
     private final File mCurrentPath;
 
     /**
      * Default File Comparator (sort folders first then regular files).
      */
-    private static final Comparator<File> DEFAULT_COMPARATOR = new Comparator<File>() {
+    private static final Comparator<File> DEFAULT_FILE_COMPARATOR = new Comparator<File>() {
 
         @Override
         public int compare(
@@ -51,8 +54,14 @@ public class FileLoader extends AbstractAsyncTaskLoader<List<File>> {
         final List<File> files = new ArrayList<>();
 
         if (this.mCurrentPath.exists() && this.mCurrentPath.canRead() && this.mCurrentPath.isDirectory()) {
-            Collections.addAll(files, this.mCurrentPath.listFiles());
-            Collections.sort(files, DEFAULT_COMPARATOR);
+            Collections.addAll(
+                    files,
+                    this.mCurrentPath.listFiles()
+            );
+            Collections.sort(
+                    files,
+                    DEFAULT_FILE_COMPARATOR
+            );
         }
 
         return files;

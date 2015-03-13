@@ -12,9 +12,12 @@ import java.util.Properties;
 /**
  * Custom implementation of {@code RobolectricTestRunner}.
  *
- * @author <a href="mailto:sebastien.grimault@makina-corpus.com">S. Grimault</a>
+ * @author S. Grimault
  */
-public class CustomRobolectricRunner extends RobolectricTestRunner {
+public class CustomRobolectricRunner
+        extends RobolectricTestRunner {
+
+    private static final String MODULE_NAME = "app";
 
     public CustomRobolectricRunner(Class<?> testClass)
             throws
@@ -24,14 +27,21 @@ public class CustomRobolectricRunner extends RobolectricTestRunner {
 
     @Override
     protected AndroidManifest getAppManifest(Config config) {
-        String path = "src/main/AndroidManifest.xml";
+        final StringBuilder androidManifestPathBuilder = new StringBuilder("src/main/AndroidManifest.xml");
 
         // Android Studio has a different execution root path for tests than pure gradle
-        if (!(new File(path)).exists()) {
-            path = "app/" + path;
+        if (!(new File(androidManifestPathBuilder.toString())).exists()) {
+            androidManifestPathBuilder.insert(
+                    0,
+                    MODULE_NAME + "/"
+            );
         }
 
-        config = updateConfig(config, "manifest", path);
+        config = updateConfig(
+                config,
+                "manifest",
+                androidManifestPathBuilder.toString()
+        );
 
         return super.getAppManifest(config);
     }
@@ -41,9 +51,16 @@ public class CustomRobolectricRunner extends RobolectricTestRunner {
             AndroidManifest appManifest,
             Config config) {
         // Robolectric doesn't support the latest android SDK version
-        config = updateConfig(config, "emulateSdk", "18");
+        config = updateConfig(
+                config,
+                "emulateSdk",
+                "18"
+        );
 
-        return super.pickSdkVersion(appManifest, config);
+        return super.pickSdkVersion(
+                appManifest,
+                config
+        );
     }
 
     private Config.Implementation updateConfig(
@@ -51,8 +68,14 @@ public class CustomRobolectricRunner extends RobolectricTestRunner {
             String key,
             String value) {
         final Properties properties = new Properties();
-        properties.setProperty(key, value);
+        properties.setProperty(
+                key,
+                value
+        );
 
-        return new Config.Implementation(config, Config.Implementation.fromProperties(properties));
+        return new Config.Implementation(
+                config,
+                Config.Implementation.fromProperties(properties)
+        );
     }
 }

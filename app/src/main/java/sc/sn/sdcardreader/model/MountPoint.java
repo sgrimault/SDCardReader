@@ -26,7 +26,7 @@ public class MountPoint
         this.storageType = storageType;
     }
 
-    public MountPoint(Parcel source) {
+    private MountPoint(Parcel source) {
         this.mountPath = source.readString();
         this.storageState = source.readString();
         this.storageType = (StorageType) source.readSerializable();

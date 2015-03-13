@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import java.text.NumberFormat;
 
+import sc.sn.android.commons.ui.adapter.AbstractListAdapter;
 import sc.sn.sdcardreader.R;
 import sc.sn.sdcardreader.model.MountPoint;
 import sc.sn.sdcardreader.util.MountPointUtils;
@@ -42,10 +43,14 @@ public class MountPointAdapter
             ViewGroup parent,
             int viewType) {
         // create a new ViewHolder
-        return new ViewHolder(LayoutInflater.from(parent.getContext())
-                                            .inflate(R.layout.card_view_mount_point,
-                                                     parent,
-                                                     false));
+        return new ViewHolder(
+                LayoutInflater.from(parent.getContext())
+                              .inflate(
+                                      R.layout.card_view_mount_point,
+                                      parent,
+                                      false
+                              )
+        );
     }
 
     @Override
@@ -83,7 +88,12 @@ public class MountPointAdapter
 
         public void bind(final MountPoint mountPoint) {
             mTextViewStoragePath.setText(mountPoint.getMountPath());
-            mTextViewStorageStatus.setText(MountPointUtils.formatStorageStatus(mContext, mountPoint.getStorageState()));
+            mTextViewStorageStatus.setText(
+                    MountPointUtils.formatStorageStatus(
+                            mContext,
+                            mountPoint.getStorageState()
+                    )
+            );
 
             mProgressBarStorageUsed.setProgress(0);
             mProgressBarStorageUsed.setMax(100);
@@ -118,11 +128,15 @@ public class MountPointAdapter
                     mTextViewStorageStatus.setTextColor(mContext.getResources().getColor(R.color.mount_point_unmounted));
                     break;
                 default:
-                    final TypedArray typedArray = mContext.getTheme().obtainStyledAttributes(
-                            R.style.AppTheme,
-                            new int[] {android.R.attr.textColorSecondary}
+                    final TypedArray typedArray = mContext.getTheme()
+                                                          .obtainStyledAttributes(
+                                                                  R.style.AppTheme,
+                                                                  new int[] {android.R.attr.textColorSecondary}
+                                                          );
+                    int textColorPrimaryResource = typedArray.getResourceId(
+                            0,
+                            0
                     );
-                    int textColorPrimaryResource = typedArray.getResourceId(0, 0);
 
                     if (textColorPrimaryResource == 0) {
                         mTextViewStorageStatus.setTextColor(Color.BLACK);
@@ -158,9 +172,12 @@ public class MountPointAdapter
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                     // animate the progress bar
-                    final ObjectAnimator animation = ObjectAnimator.ofInt(mProgressBarStorageUsed,
-                                                                          "progress",
-                                                                          Double.valueOf(storageUsedFraction * 100).intValue());
+                    final ObjectAnimator animation = ObjectAnimator.ofInt(
+                            mProgressBarStorageUsed,
+                            "progress",
+                            Double.valueOf(storageUsedFraction * 100)
+                                  .intValue()
+                    );
                     animation.setStartDelay(500); // 0.5 second
                     animation.setDuration(500); // 0.5 second
                     animation.setInterpolator(new DecelerateInterpolator());

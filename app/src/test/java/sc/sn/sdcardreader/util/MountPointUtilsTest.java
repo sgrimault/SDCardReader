@@ -23,7 +23,10 @@ public class MountPointUtilsTest {
         final MountPoint mountPoint = MountPointUtils.getInternalStorage();
 
         Assert.assertNotNull(mountPoint);
-        Assert.assertEquals(MountPoint.StorageType.INTERNAL, mountPoint.getStorageType());
+        Assert.assertEquals(
+                MountPoint.StorageType.INTERNAL,
+                mountPoint.getStorageType()
+        );
     }
 
     @Test
@@ -31,39 +34,65 @@ public class MountPointUtilsTest {
         final List<MountPoint> mountPoints = MountPointUtils.getMountPointsFromSystemEnv();
 
         Assert.assertNotNull(mountPoints);
-        Assert.assertEquals(1, mountPoints.size());
+        Assert.assertEquals(
+                1,
+                mountPoints.size()
+        );
 
         final MountPoint mountPoint = mountPoints.get(0);
-        Assert.assertEquals(MountPoint.StorageType.INTERNAL, mountPoint.getStorageType());
+        Assert.assertEquals(
+                MountPoint.StorageType.INTERNAL,
+                mountPoint.getStorageType()
+        );
     }
 
     @Test
     public void testFormatStorageSize() {
         long storageInB = 128l;
-        final String storageInBFormatted = MountPointUtils.formatStorageSize(Robolectric.application,
-                                                                             storageInB);
+        final String storageInBFormatted = MountPointUtils.formatStorageSize(
+                Robolectric.application,
+                storageInB
+        );
         Assert.assertNotNull(storageInB);
-        Assert.assertEquals("128 B", storageInBFormatted);
+        Assert.assertEquals(
+                "128 B",
+                storageInBFormatted
+        );
 
         long storageInKb = 1024l;
-        final String storageInkbFormatted = MountPointUtils.formatStorageSize(Robolectric.application,
-                                                                        storageInKb);
+        final String storageInKbFormatted = MountPointUtils.formatStorageSize(
+                Robolectric.application,
+                storageInKb
+        );
 
         Assert.assertNotNull(storageInKb);
-        Assert.assertEquals("1,0 kB", storageInkbFormatted);
+        Assert.assertEquals(
+                "1,0 kB",
+                storageInKbFormatted
+        );
 
         long storageInMb = storageInKb * 1024;
-        final String storageInMbFormatted = MountPointUtils.formatStorageSize(Robolectric.application,
-                                                                              storageInMb);
+        final String storageInMbFormatted = MountPointUtils.formatStorageSize(
+                Robolectric.application,
+                storageInMb
+        );
 
         Assert.assertNotNull(storageInMb);
-        Assert.assertEquals("1,0 MB", storageInMbFormatted);
+        Assert.assertEquals(
+                "1,0 MB",
+                storageInMbFormatted
+        );
 
         long storageInGb = storageInMb * 1024;
-        final String storageInGbFormatted = MountPointUtils.formatStorageSize(Robolectric.application,
-                                                                              storageInGb);
+        final String storageInGbFormatted = MountPointUtils.formatStorageSize(
+                Robolectric.application,
+                storageInGb
+        );
 
         Assert.assertNotNull(storageInGb);
-        Assert.assertEquals("1,0 GB", storageInGbFormatted);
+        Assert.assertEquals(
+                "1,0 GB",
+                storageInGbFormatted
+        );
     }
 }

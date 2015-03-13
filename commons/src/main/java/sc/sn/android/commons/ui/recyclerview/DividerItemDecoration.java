@@ -1,4 +1,4 @@
-package sc.sn.sdcardreader.ui.widget.recyclerview;
+package sc.sn.android.commons.ui.recyclerview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -24,14 +24,15 @@ import android.view.View;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class DividerItemDecoration extends RecyclerView.ItemDecoration {
+public class DividerItemDecoration
+        extends RecyclerView.ItemDecoration {
 
     private static final int[] ATTRS = new int[] {android.R.attr.listDivider};
 
     public static final int HORIZONTAL_LIST = LinearLayoutManager.HORIZONTAL;
     public static final int VERTICAL_LIST = LinearLayoutManager.VERTICAL;
 
-    private Drawable mDivider;
+    private final Drawable mDivider;
     private int mOrientation;
 
     public DividerItemDecoration(
