@@ -1,10 +1,10 @@
 package sc.sn.sdcardreader.ui.adapter;
 
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,6 +18,7 @@ import android.widget.TextView;
 import java.text.NumberFormat;
 
 import sc.sn.android.commons.ui.adapter.AbstractListAdapter;
+import sc.sn.android.commons.util.DeviceUtils;
 import sc.sn.sdcardreader.R;
 import sc.sn.sdcardreader.model.MountPoint;
 import sc.sn.sdcardreader.util.MountPointUtils;
@@ -86,6 +87,7 @@ public class MountPointAdapter
             mProgressBarStorageUsed = (ProgressBar) itemView.findViewById(R.id.progressBarStorageUsed);
         }
 
+        @SuppressLint("NewApi")
         public void bind(final MountPoint mountPoint) {
             mTextViewStoragePath.setText(mountPoint.getMountPath());
             mTextViewStorageStatus.setText(
@@ -170,7 +172,7 @@ public class MountPointAdapter
 
                 mProgressBarStorageUsed.setVisibility(View.VISIBLE);
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                if (DeviceUtils.isPostHoneycomb()) {
                     // animate the progress bar
                     final ObjectAnimator animation = ObjectAnimator.ofInt(
                             mProgressBarStorageUsed,
@@ -217,6 +219,6 @@ public class MountPointAdapter
      */
     public interface OnMountPointItemListener {
 
-        public void onMountPointSelected(MountPoint mountPoint);
+        void onMountPointSelected(MountPoint mountPoint);
     }
 }

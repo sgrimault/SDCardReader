@@ -21,9 +21,9 @@ import android.widget.ListView;
 import java.text.DateFormat;
 import java.util.Date;
 
+import sc.sn.android.commons.util.DeviceUtils;
 import sc.sn.sdcardreader.BuildConfig;
 import sc.sn.sdcardreader.R;
-import sc.sn.sdcardreader.util.DeviceUtils;
 
 /**
  * Global preferences.

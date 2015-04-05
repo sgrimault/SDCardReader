@@ -9,11 +9,11 @@ import android.widget.Toast;
 
 import java.io.File;
 
+import sc.sn.android.commons.util.DeviceUtils;
 import sc.sn.sdcardreader.R;
 import sc.sn.sdcardreader.model.MountPoint;
 import sc.sn.sdcardreader.ui.fragment.FileRecyclerViewFragment;
 import sc.sn.sdcardreader.ui.fragment.MountPointRecyclerViewFragment;
-import sc.sn.sdcardreader.util.DeviceUtils;
 
 /**
  * This is the main {@code Activity} of this application.
