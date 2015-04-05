@@ -28,10 +28,13 @@ public abstract class AbstractListAdapter<T, VH extends RecyclerView.ViewHolder>
     public void clear() {
         int itemCount = getItemCount();
         mObjects.clear();
-        notifyItemRangeRemoved(
-                0,
-                itemCount
-        );
+
+        if (itemCount > 0) {
+            notifyItemRangeRemoved(
+                    0,
+                    itemCount
+            );
+        }
     }
 
     /**
@@ -113,6 +116,13 @@ public abstract class AbstractListAdapter<T, VH extends RecyclerView.ViewHolder>
 
         if (mObjects.remove(object)) {
             notifyItemRemoved(index);
+
+            if (getItemCount() > 0) {
+                notifyItemRangeChanged(
+                        index,
+                        mObjects.size() - index
+                );
+            }
         }
     }
 
@@ -128,6 +138,13 @@ public abstract class AbstractListAdapter<T, VH extends RecyclerView.ViewHolder>
 
         if (mObjects.remove(index) != null) {
             notifyItemRemoved(index);
+
+            if (getItemCount() > 0) {
+                notifyItemRangeChanged(
+                        index,
+                        mObjects.size() - index
+                );
+            }
         }
     }
 }

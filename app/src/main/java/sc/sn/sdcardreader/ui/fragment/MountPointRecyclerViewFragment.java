@@ -146,6 +146,6 @@ public class MountPointRecyclerViewFragment
      */
     public interface OnMountPointRecyclerViewFragmentListener {
 
-        public void onMountPointSelected(MountPoint mountPoint);
+        void onMountPointSelected(MountPoint mountPoint);
     }
 }

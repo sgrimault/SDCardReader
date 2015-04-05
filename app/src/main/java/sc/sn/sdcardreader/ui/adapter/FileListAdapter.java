@@ -136,6 +136,6 @@ public class FileListAdapter
      */
     public interface OnFileItemListener {
 
-        public void onFileSelected(File file);
+        void onFileSelected(File file);
     }
 }

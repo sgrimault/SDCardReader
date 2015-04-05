@@ -95,6 +95,7 @@ public class MountPointUtils {
      * @see #getMountPointsFromSystemEnv()
      * @see #getMountPointsFromVold()
      */
+    @NonNull
     public static List<MountPoint> getMountPoints() {
         final List<MountPoint> mountPoints = getMountPointsFromSystemEnv();
 
@@ -110,6 +111,20 @@ public class MountPointUtils {
         }
 
         return mountPoints;
+    }
+
+    /**
+     * Check if the gieven {@link MountPoint} is mounted or not:
+     * <ul>
+     *     <li>{@code Environment.MEDIA_MOUNTED}</li>
+     *     <li>{@code Environment.MEDIA_MOUNTED_READ_ONLY}</li>
+     * </ul>
+     *
+     * @param mountPoint the given {@link MountPoint} to check
+     * @return {@code true} if the gieven {@link MountPoint} is mounted, {@code false} otherwise
+     */
+    public static boolean isMounted(@NonNull final MountPoint mountPoint) {
+        return mountPoint.getStorageState().equals(Environment.MEDIA_MOUNTED) || mountPoint.getStorageState().equals(Environment.MEDIA_MOUNTED_READ_ONLY);
     }
 
     /**

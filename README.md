@@ -9,5 +9,8 @@ A full build can be executed with the following command:
 
 >     ./gradlew clean assembleDebug
 
+With tests:
+>     ./gradlew clean assembleDebug testDebug
+
 ## Licensing
 Licensed under the Apache Software License, Version 2.0.

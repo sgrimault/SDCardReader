@@ -52,7 +52,7 @@ public class UserSharedPreferences {
      *
      * @author S. Grimault
      */
-    public static enum RecyclerViewMode {
+    public enum RecyclerViewMode {
 
         /**
          * Standard vertically scrolling list.

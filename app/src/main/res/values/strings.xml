@@ -1,6 +1,12 @@
 <resources>
 
     <string name="app_name">SDCardReader</string>
+    <string name="app_version">%1$s (%2$s)\n%3$s</string>
+
+    <string name="settings_title">Settings</string>
+
+    <string name="preference_category_about">About</string>
+    <string name="preference_category_about_app_version">App version</string>
 
     <string name="storage_status_mounted">mounted (rw)</string>
     <string name="storage_status_mounted_ro">mounted (ro)</string>
@@ -12,7 +18,9 @@
 
     <string name="file_no_data">Folder empty</string>
 
+    <string name="menu_item_settings">Settings</string>
     <string name="menu_item_view_mode">Show items as %1$s</string>
+
     <string name="view_list">list</string>
     <string name="view_grid">grid</string>
 

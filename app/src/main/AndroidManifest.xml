@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
     package="sc.sn.sdcardreader"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:versionCode="262">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -14,13 +13,20 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.activity.SettingsActivity"
+            android:label="@string/settings_title"/>
+        <activity
+            android:name=".ui.activity.SettingsFragmentActivity"
+            android:label="@string/settings_title"/>
 
     </application>
 
