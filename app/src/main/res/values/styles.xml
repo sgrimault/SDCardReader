@@ -2,7 +2,14 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+
+        <!-- main theme colors -->
+        <item name="android:textColorSecondary">@color/textColorSecondary</item>
+
         <item name="actionBarStyle">@style/AppTheme.ActionBarStyle</item>
+
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+
     </style>
 
     <style name="AppTheme.ActionBarStyle" parent="@style/Widget.AppCompat.ActionBar.Solid">

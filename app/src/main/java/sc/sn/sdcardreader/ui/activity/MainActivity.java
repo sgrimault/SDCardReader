@@ -10,7 +10,6 @@ import android.widget.Toast;
 import java.io.File;
 
 import sc.sn.android.commons.model.MountPoint;
-import sc.sn.android.commons.util.DeviceUtils;
 import sc.sn.sdcardreader.R;
 import sc.sn.sdcardreader.ui.fragment.FileRecyclerViewFragment;
 import sc.sn.sdcardreader.ui.fragment.MountPointRecyclerViewFragment;
@@ -52,14 +51,8 @@ public class MainActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_settings:
-                if (DeviceUtils.isPostHoneycomb()) {
-                    startActivity(new Intent(this,
-                                             SettingsFragmentActivity.class));
-                }
-                else {
-                    startActivity(new Intent(this,
-                                             SettingsActivity.class));
-                }
+                startActivity(new Intent(this,
+                                         SettingsActivity.class));
 
                 return true;
             default:
