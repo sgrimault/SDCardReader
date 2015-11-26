@@ -1,4 +1,4 @@
-package sc.sn.sdcardreader.util;
+package sc.sn.android.commons.util;
 
 import android.content.Context;
 import android.os.Environment;
@@ -15,18 +15,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import sc.sn.sdcardreader.R;
-import sc.sn.sdcardreader.model.MountPoint;
+import sc.sn.android.commons.R;
+import sc.sn.android.commons.model.MountPoint;
 
 /**
- * Class helper about {@link sc.sn.sdcardreader.model.MountPoint}.
+ * Class helper about {@link MountPoint}.
  *
  * @author S. Grimault
  */
 public class MountPointUtils {
 
     /**
-     * Return the primary external storage as {@link sc.sn.sdcardreader.model.MountPoint}.
+     * Return the primary external storage as {@link MountPoint}.
      *
      * @return the primary external storage
      */
@@ -35,23 +35,20 @@ public class MountPointUtils {
         final String externalStorage = System.getenv("EXTERNAL_STORAGE");
 
         if (TextUtils.isEmpty(externalStorage)) {
-            return new MountPoint(
-                    Environment.getExternalStorageDirectory().getAbsolutePath(),
-                    Environment.getExternalStorageState(),
-                    MountPoint.StorageType.INTERNAL
-            );
+            return new MountPoint(Environment.getExternalStorageDirectory()
+                                             .getAbsolutePath(),
+                                  Environment.getExternalStorageState(),
+                                  MountPoint.StorageType.INTERNAL);
         }
         else {
-            return new MountPoint(
-                    externalStorage,
-                    Environment.getExternalStorageState(),
-                    MountPoint.StorageType.INTERNAL
-            );
+            return new MountPoint(externalStorage,
+                                  Environment.getExternalStorageState(),
+                                  MountPoint.StorageType.INTERNAL);
         }
     }
 
     /**
-     * Return the secondary external storage as {@link sc.sn.sdcardreader.model.MountPoint} if found.
+     * Return the secondary external storage as {@link MountPoint} if found.
      *
      * @return the secondary external storage or {@code null} if not found
      */
@@ -59,28 +56,25 @@ public class MountPointUtils {
     public static MountPoint getExternalStorage() {
         // try to found the secondary external storage using System environment
         final List<MountPoint> mountPoints = getMountPointsFromSystemEnv();
-        final Iterator<MountPoint> mountPointIterator = mountPoints.iterator();
+        Iterator<MountPoint> mountPointIterator = mountPoints.iterator();
         MountPoint externalMountPoint = null;
 
         while (mountPointIterator.hasNext() && (externalMountPoint == null)) {
             final MountPoint mountPoint = mountPointIterator.next();
             externalMountPoint = (mountPoint.getStorageType()
-                                            .equals(MountPoint.StorageType.EXTERNAL)
-                                  ? mountPoint
-                                  : null);
+                                            .equals(MountPoint.StorageType.EXTERNAL) ? mountPoint : null);
         }
 
         // fallback: parse file 'vold.fstab' and try to find the secondary external storage
         if (externalMountPoint == null) {
             mountPoints.clear();
             mountPoints.addAll(getMountPointsFromVold());
+            mountPointIterator = mountPoints.iterator();
 
             while (mountPointIterator.hasNext() && (externalMountPoint == null)) {
                 MountPoint mountPoint = mountPointIterator.next();
                 externalMountPoint = (mountPoint.getStorageType()
-                                                .equals(MountPoint.StorageType.EXTERNAL)
-                                      ? mountPoint
-                                      : null);
+                                                .equals(MountPoint.StorageType.EXTERNAL) ? mountPoint : null);
             }
         }
 
@@ -88,10 +82,9 @@ public class MountPointUtils {
     }
 
     /**
-     * Retrieves a {@code List} of all available {@link sc.sn.sdcardreader.model.MountPoint}s
+     * Retrieves a {@code List} of all available {@link MountPoint}s
      *
-     * @return a {@code List} of available {@link sc.sn.sdcardreader.model.MountPoint}s
-     *
+     * @return a {@code List} of available {@link MountPoint}s
      * @see #getMountPointsFromSystemEnv()
      * @see #getMountPointsFromVold()
      */
@@ -104,7 +97,8 @@ public class MountPointUtils {
             final List<MountPoint> mountPointsFromVold = getMountPointsFromVold();
 
             for (MountPoint mountPoint : mountPointsFromVold) {
-                if (!mountPoint.getStorageType().equals(MountPoint.StorageType.INTERNAL)) {
+                if (!mountPoint.getStorageType()
+                               .equals(MountPoint.StorageType.INTERNAL)) {
                     mountPoints.add(mountPoint);
                 }
             }
@@ -114,17 +108,19 @@ public class MountPointUtils {
     }
 
     /**
-     * Check if the gieven {@link MountPoint} is mounted or not:
+     * Check if the given {@link MountPoint} is mounted or not:
      * <ul>
-     *     <li>{@code Environment.MEDIA_MOUNTED}</li>
-     *     <li>{@code Environment.MEDIA_MOUNTED_READ_ONLY}</li>
+     * <li>{@code Environment.MEDIA_MOUNTED}</li>
+     * <li>{@code Environment.MEDIA_MOUNTED_READ_ONLY}</li>
      * </ul>
      *
      * @param mountPoint the given {@link MountPoint} to check
      * @return {@code true} if the gieven {@link MountPoint} is mounted, {@code false} otherwise
      */
     public static boolean isMounted(@NonNull final MountPoint mountPoint) {
-        return mountPoint.getStorageState().equals(Environment.MEDIA_MOUNTED) || mountPoint.getStorageState().equals(Environment.MEDIA_MOUNTED_READ_ONLY);
+        return mountPoint.getStorageState()
+                         .equals(Environment.MEDIA_MOUNTED) || mountPoint.getStorageState()
+                                                                         .equals(Environment.MEDIA_MOUNTED_READ_ONLY);
     }
 
     /**
@@ -132,7 +128,6 @@ public class MountPointUtils {
      *
      * @param context     the current context
      * @param storageSize the storage size in bytes to format
-     *
      * @return a human representation of the storage size
      */
     @NonNull
@@ -156,23 +151,18 @@ public class MountPointUtils {
             }
         }
 
-        int stringResource = context.getResources().getIdentifier(
-                "storage_size_" + storageSuffix,
-                "string",
-                context.getPackageName()
-        );
+        int stringResource = context.getResources()
+                                    .getIdentifier("storage_size_" + storageSuffix,
+                                                   "string",
+                                                   context.getPackageName());
 
         if (stringResource == 0) {
-            return context.getString(
-                    R.string.storage_size_kb,
-                    storageSize / 1024f
-            );
+            return context.getString(R.string.storage_size_kb,
+                                     storageSize / 1024f);
         }
 
-        return context.getString(
-                stringResource,
-                formatedStorageSize
-        );
+        return context.getString(stringResource,
+                                 formatedStorageSize);
     }
 
     /**
@@ -180,16 +170,15 @@ public class MountPointUtils {
      *
      * @param context the current context
      * @param status  the storage status
-     *
      * @return a human representation of the storage status
      */
+    @NonNull
     public static String formatStorageStatus(Context context,
                                              @NonNull final String status) {
-        int stringResource = context.getResources().getIdentifier(
-                "storage_status_" + status,
-                "string",
-                context.getPackageName()
-        );
+        int stringResource = context.getResources()
+                                    .getIdentifier("storage_status_" + status,
+                                                   "string",
+                                                   context.getPackageName());
 
         if (stringResource == 0) {
             return context.getString(R.string.storage_status_unmounted);
@@ -199,11 +188,12 @@ public class MountPointUtils {
     }
 
     /**
-     * Retrieves a {@code List} of {@link sc.sn.sdcardreader.model.MountPoint}s from
+     * Retrieves a {@code List} of {@link MountPoint}s from
      * {@code 'vold.fstab'} system file.
      *
-     * @return a {@code List} of available {@link sc.sn.sdcardreader.model.MountPoint}s
+     * @return a {@code List} of available {@link MountPoint}s
      */
+    @NonNull
     static List<MountPoint> getMountPointsFromVold() {
         final List<MountPoint> mountPoints = new ArrayList<>();
         final File voldFstabFile = new File("/system/etc/vold.fstab");
@@ -268,24 +258,18 @@ public class MountPointUtils {
                                     storageState = Environment.MEDIA_MOUNTED_READ_ONLY;
                                 }
 
-                                mountPoints.add(
-                                        new MountPoint(
-                                                tokens[2],
-                                                storageState,
-                                                storageType
-                                        )
-                                );
+                                mountPoints.add(new MountPoint(tokens[2],
+                                                               storageState,
+                                                               storageType));
                             }
                         }
                     }
                 }
             }
             catch (IOException ioe) {
-                Log.w(
-                        MountPointUtils.class.getName(),
-                        ioe.getMessage(),
-                        ioe
-                );
+                Log.w(MountPointUtils.class.getName(),
+                      ioe.getMessage(),
+                      ioe);
             }
             finally {
                 if (fileReader != null) {
@@ -293,11 +277,9 @@ public class MountPointUtils {
                         fileReader.close();
                     }
                     catch (IOException ioe) {
-                        Log.w(
-                                MountPointUtils.class.getName(),
-                                ioe.getMessage(),
-                                ioe
-                        );
+                        Log.w(MountPointUtils.class.getName(),
+                              ioe.getMessage(),
+                              ioe);
                     }
                 }
 
@@ -306,11 +288,9 @@ public class MountPointUtils {
                         bufferedReader.close();
                     }
                     catch (IOException ioe) {
-                        Log.w(
-                                MountPointUtils.class.getName(),
-                                ioe.getMessage(),
-                                ioe
-                        );
+                        Log.w(MountPointUtils.class.getName(),
+                              ioe.getMessage(),
+                              ioe);
                     }
                 }
             }
@@ -320,10 +300,10 @@ public class MountPointUtils {
     }
 
     /**
-     * Retrieves a {@code List} of {@link sc.sn.sdcardreader.model.MountPoint}s from {@code System}
+     * Retrieves a {@code List} of {@link MountPoint}s from {@code System}
      * environment.
      *
-     * @return a {@code List} of available {@link sc.sn.sdcardreader.model.MountPoint}s
+     * @return a {@code List} of available {@link MountPoint}s
      */
     @NonNull
     static List<MountPoint> getMountPointsFromSystemEnv() {
@@ -332,22 +312,15 @@ public class MountPointUtils {
         final String externalStorage = System.getenv("EXTERNAL_STORAGE");
 
         if (TextUtils.isEmpty(externalStorage)) {
-            mountPoints.add(
-                    new MountPoint(
-                            Environment.getExternalStorageDirectory().getAbsolutePath(),
-                            Environment.getExternalStorageState(),
-                            MountPoint.StorageType.INTERNAL
-                    )
-            );
+            mountPoints.add(new MountPoint(Environment.getExternalStorageDirectory()
+                                                      .getAbsolutePath(),
+                                           Environment.getExternalStorageState(),
+                                           MountPoint.StorageType.INTERNAL));
         }
         else {
-            mountPoints.add(
-                    new MountPoint(
-                            externalStorage,
-                            Environment.getExternalStorageState(),
-                            MountPoint.StorageType.INTERNAL
-                    )
-            );
+            mountPoints.add(new MountPoint(externalStorage,
+                                           Environment.getExternalStorageState(),
+                                           MountPoint.StorageType.INTERNAL));
         }
 
         final String secondaryStorage = System.getenv("SECONDARY_STORAGE");
@@ -369,15 +342,9 @@ public class MountPointUtils {
                         storageState = Environment.MEDIA_MOUNTED_READ_ONLY;
                     }
 
-                    mountPoints.add(
-                            new MountPoint(
-                                    path,
-                                    storageState,
-                                    (firstSecondaryStorage)
-                                    ? MountPoint.StorageType.EXTERNAL
-                                    : MountPoint.StorageType.USB
-                            )
-                    );
+                    mountPoints.add(new MountPoint(path,
+                                                   storageState,
+                                                   (firstSecondaryStorage) ? MountPoint.StorageType.EXTERNAL : MountPoint.StorageType.USB));
                     firstSecondaryStorage = false;
                 }
             }

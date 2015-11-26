@@ -22,28 +22,20 @@ public class UserSharedPreferences {
      * @param context the current context to use
      */
     public UserSharedPreferences(final Context context) {
-        mSharedPreferences = context.getSharedPreferences(
-                USER_SHARED_PREFERENCES,
-                Context.MODE_PRIVATE
-        );
+        mSharedPreferences = context.getSharedPreferences(USER_SHARED_PREFERENCES,
+                                                          Context.MODE_PRIVATE);
     }
 
     @NonNull
     public RecyclerViewMode getRecyclerViewMode() {
-        return RecyclerViewMode.valueOf(
-                mSharedPreferences.getString(
-                        KEY_RECYCLER_VIEW_MODE,
-                        RecyclerViewMode.LIST.name()
-                )
-        );
+        return RecyclerViewMode.valueOf(mSharedPreferences.getString(KEY_RECYCLER_VIEW_MODE,
+                                                                     RecyclerViewMode.LIST.name()));
     }
 
     public void setRecyclerViewMode(@NonNull final RecyclerViewMode recyclerViewMode) {
         mSharedPreferences.edit()
-                          .putString(
-                                  KEY_RECYCLER_VIEW_MODE,
-                                  recyclerViewMode.name()
-                          )
+                          .putString(KEY_RECYCLER_VIEW_MODE,
+                                     recyclerViewMode.name())
                           .apply();
     }
 

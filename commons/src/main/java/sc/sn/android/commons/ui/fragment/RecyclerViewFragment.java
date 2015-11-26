@@ -26,23 +26,20 @@ public class RecyclerViewFragment
     protected TextView mTextViewEmpty;
 
     @Override
-    public View onCreateView(
-            LayoutInflater inflater,
-            ViewGroup container,
-            Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container,
+                             Bundle savedInstanceState) {
         // inflate the layout for this fragment
-        return inflater.inflate(
-                R.layout.fragment_recycler_view,
-                container,
-                false
-        );
+        return inflater.inflate(R.layout.fragment_recycler_view,
+                                container,
+                                false);
     }
 
     @Override
-    public void onViewCreated(
-            View view,
-            @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onViewCreated(View view,
+                              @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view,
+                            savedInstanceState);
 
         mRecyclerView = (RecyclerView) view.findViewById(android.R.id.list);
         mRecyclerView.setHasFixedSize(true);
@@ -64,34 +61,27 @@ public class RecyclerViewFragment
             // start out with a progress indicator
             showProgressBar(true);
 
-            adapter.registerAdapterDataObserver(
-                    new RecyclerView.AdapterDataObserver() {
+            adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
 
-                        @Override
-                        public void onChanged() {
-                            super.onChanged();
+                @Override
+                public void onChanged() {
+                    super.onChanged();
 
-                            showProgressBar(false);
-                            showEmptyText(
-                                    mRecyclerView.getAdapter()
-                                                 .getItemCount() == 0
-                            );
-                        }
+                    showProgressBar(false);
+                    showEmptyText(mRecyclerView.getAdapter()
+                                               .getItemCount() == 0);
+                }
 
-                        @Override
-                        public void onItemRangeInserted(
-                                int positionStart,
-                                int itemCount) {
-                            super.onItemRangeInserted(
-                                    positionStart,
-                                    itemCount
-                            );
+                @Override
+                public void onItemRangeInserted(int positionStart,
+                                                int itemCount) {
+                    super.onItemRangeInserted(positionStart,
+                                              itemCount);
 
-                            showProgressBar(false);
-                            showEmptyText(false);
-                        }
-                    }
-            );
+                    showProgressBar(false);
+                    showEmptyText(false);
+                }
+            });
         }
     }
 
@@ -106,22 +96,14 @@ public class RecyclerViewFragment
 
         if (show) {
             mTextViewEmpty.setVisibility(View.GONE);
-            mProgressView.startAnimation(
-                    AnimationUtils.loadAnimation(
-                            getActivity(),
-                            android.R.anim.fade_in
-                    )
-            );
+            mProgressView.startAnimation(AnimationUtils.loadAnimation(getActivity(),
+                                                                      android.R.anim.fade_in));
             mProgressView.setVisibility(View.VISIBLE);
 
         }
         else {
-            mProgressView.startAnimation(
-                    AnimationUtils.loadAnimation(
-                            getActivity(),
-                            android.R.anim.fade_out
-                    )
-            );
+            mProgressView.startAnimation(AnimationUtils.loadAnimation(getActivity(),
+                                                                      android.R.anim.fade_out));
             mProgressView.setVisibility(View.GONE);
         }
     }
@@ -132,22 +114,14 @@ public class RecyclerViewFragment
         }
 
         if (show) {
-            mTextViewEmpty.startAnimation(
-                    AnimationUtils.loadAnimation(
-                            getActivity(),
-                            android.R.anim.fade_in
-                    )
-            );
+            mTextViewEmpty.startAnimation(AnimationUtils.loadAnimation(getActivity(),
+                                                                       android.R.anim.fade_in));
             mTextViewEmpty.setVisibility(View.VISIBLE);
 
         }
         else {
-            mTextViewEmpty.startAnimation(
-                    AnimationUtils.loadAnimation(
-                            getActivity(),
-                            android.R.anim.fade_out
-                    )
-            );
+            mTextViewEmpty.startAnimation(AnimationUtils.loadAnimation(getActivity(),
+                                                                       android.R.anim.fade_out));
             mTextViewEmpty.setVisibility(View.GONE);
         }
     }

@@ -2,16 +2,16 @@ package sc.sn.sdcardreader.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.io.File;
 
+import sc.sn.android.commons.model.MountPoint;
 import sc.sn.android.commons.util.DeviceUtils;
 import sc.sn.sdcardreader.R;
-import sc.sn.sdcardreader.model.MountPoint;
 import sc.sn.sdcardreader.ui.fragment.FileRecyclerViewFragment;
 import sc.sn.sdcardreader.ui.fragment.MountPointRecyclerViewFragment;
 
@@ -21,7 +21,7 @@ import sc.sn.sdcardreader.ui.fragment.MountPointRecyclerViewFragment;
  * @author S. Grimault
  */
 public class MainActivity
-        extends ActionBarActivity
+        extends AppCompatActivity
         implements MountPointRecyclerViewFragment.OnMountPointRecyclerViewFragmentListener,
                    FileRecyclerViewFragment.OnFileRecyclerViewFragmentListener {
 
@@ -33,10 +33,8 @@ public class MainActivity
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                                       .add(
-                                               android.R.id.content,
-                                               MountPointRecyclerViewFragment.newInstance()
-                                       )
+                                       .add(android.R.id.content,
+                                            MountPointRecyclerViewFragment.newInstance())
                                        .commit();
         }
     }
@@ -44,10 +42,8 @@ public class MainActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(
-                R.menu.settings,
-                menu
-        );
+        getMenuInflater().inflate(R.menu.settings,
+                                  menu);
 
         return true;
     }
@@ -57,20 +53,12 @@ public class MainActivity
         switch (item.getItemId()) {
             case R.id.menu_item_settings:
                 if (DeviceUtils.isPostHoneycomb()) {
-                    startActivity(
-                            new Intent(
-                                    this,
-                                    SettingsFragmentActivity.class
-                            )
-                    );
+                    startActivity(new Intent(this,
+                                             SettingsFragmentActivity.class));
                 }
                 else {
-                    startActivity(
-                            new Intent(
-                                    this,
-                                    SettingsActivity.class
-                            )
-                    );
+                    startActivity(new Intent(this,
+                                             SettingsActivity.class));
                 }
 
                 return true;
@@ -83,17 +71,13 @@ public class MainActivity
     public void onMountPointSelected(MountPoint mountPoint) {
         getSupportFragmentManager().beginTransaction()
                 // apply slide in / slide out animation effect between fragments
-                .setCustomAnimations(
-                        R.anim.fragment_enter_slide_left,
-                        R.anim.fragment_exit_slide_left,
-                        R.anim.fragment_pop_enter_slide_right,
-                        R.anim.fragment_pop_exit_slide_right
-                )
-                .replace(
-                        android.R.id.content,
-                        FileRecyclerViewFragment.newInstance(new File(mountPoint.getMountPath())),
-                        FileRecyclerViewFragment.class.getName()
-                )
+                .setCustomAnimations(R.anim.fragment_enter_slide_left,
+                                     R.anim.fragment_exit_slide_left,
+                                     R.anim.fragment_pop_enter_slide_right,
+                                     R.anim.fragment_pop_exit_slide_right)
+                .replace(android.R.id.content,
+                         FileRecyclerViewFragment.newInstance(new File(mountPoint.getMountPath())),
+                         FileRecyclerViewFragment.class.getName())
                 .addToBackStack(null)
                 .commit();
     }
@@ -103,26 +87,21 @@ public class MainActivity
         if (file.isDirectory()) {
             getSupportFragmentManager().beginTransaction()
                     // apply slide in / slide out animation effect between fragments
-                    .setCustomAnimations(
-                            R.anim.fragment_enter_slide_left,
-                            R.anim.fragment_exit_slide_left,
-                            R.anim.fragment_pop_enter_slide_right,
-                            R.anim.fragment_pop_exit_slide_right
-                    )
-                    .replace(
-                            android.R.id.content,
-                            FileRecyclerViewFragment.newInstance(file),
-                            FileRecyclerViewFragment.class.getName()
-                    )
+                    .setCustomAnimations(R.anim.fragment_enter_slide_left,
+                                         R.anim.fragment_exit_slide_left,
+                                         R.anim.fragment_pop_enter_slide_right,
+                                         R.anim.fragment_pop_exit_slide_right)
+                    .replace(android.R.id.content,
+                             FileRecyclerViewFragment.newInstance(file),
+                             FileRecyclerViewFragment.class.getName())
                     .addToBackStack(null)
                     .commit();
         }
         else {
-            Toast.makeText(
-                    this,
-                    file.getPath(),
-                    Toast.LENGTH_SHORT
-            ).show();
+            Toast.makeText(this,
+                           file.getPath(),
+                           Toast.LENGTH_SHORT)
+                 .show();
         }
     }
 }

@@ -8,6 +8,12 @@
     android:layout_margin="5dp"
     app:cardCornerRadius="4dp">
 
-    <include layout="@layout/list_item_mount_point"/>
+    <sc.sn.sdcardreader.ui.widget.MountPointView
+        android:id="@+id/mountPointView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:minHeight="?android:attr/listPreferredItemHeight"
+        android:padding="8dp"/>
 
 </android.support.v7.widget.CardView>

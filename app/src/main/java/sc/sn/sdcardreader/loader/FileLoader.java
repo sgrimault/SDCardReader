@@ -12,8 +12,9 @@ import sc.sn.android.commons.loader.AbstractAsyncTaskLoader;
 
 /**
  * Default {@code Loader} about {@code File}s.
+ * <p/>
  *
- * S. Grimault
+ * @author S. Grimault
  */
 public class FileLoader
         extends AbstractAsyncTaskLoader<List<File>> {
@@ -26,9 +27,8 @@ public class FileLoader
     private static final Comparator<File> DEFAULT_FILE_COMPARATOR = new Comparator<File>() {
 
         @Override
-        public int compare(
-                File lhs,
-                File rhs) {
+        public int compare(File lhs,
+                           File rhs) {
 
             if (lhs.isDirectory() && !rhs.isDirectory()) {
                 return -1;
@@ -43,7 +43,8 @@ public class FileLoader
         }
     };
 
-    public FileLoader(Context context, File pCurrentPath) {
+    public FileLoader(Context context,
+                      File pCurrentPath) {
         super(context);
 
         this.mCurrentPath = pCurrentPath;
@@ -54,14 +55,10 @@ public class FileLoader
         final List<File> files = new ArrayList<>();
 
         if (this.mCurrentPath.exists() && this.mCurrentPath.canRead() && this.mCurrentPath.isDirectory()) {
-            Collections.addAll(
-                    files,
-                    this.mCurrentPath.listFiles()
-            );
-            Collections.sort(
-                    files,
-                    DEFAULT_FILE_COMPARATOR
-            );
+            Collections.addAll(files,
+                               this.mCurrentPath.listFiles());
+            Collections.sort(files,
+                             DEFAULT_FILE_COMPARATOR);
         }
 
         return files;

@@ -17,11 +17,13 @@ import java.io.File;
  */
 public class FileUtils {
 
-    public void startIntent(Context context, @NonNull final File file) {
+    public void startIntent(Context context,
+                            @NonNull final File file) {
         if (file.isFile()) {
             final Intent intent = new Intent(Intent.ACTION_VIEW);
 
-            MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(file).getPath());
+            MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(file)
+                                                   .getPath());
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         }
@@ -30,10 +32,12 @@ public class FileUtils {
     @Nullable
     public static String getMimeType(@NonNull final File file) {
         if (file.isFile()) {
-            final String fileExtension = MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(file).getPath());
+            final String fileExtension = MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(file)
+                                                                                .getPath());
 
             if (!TextUtils.isEmpty(fileExtension)) {
-                return MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
+                return MimeTypeMap.getSingleton()
+                                  .getMimeTypeFromExtension(fileExtension);
             }
         }
 

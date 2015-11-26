@@ -5,8 +5,9 @@ import android.support.v4.content.AsyncTaskLoader;
 
 /**
  * Base {@code Loader}.
+ * <p>
  *
- * S. Grimault
+ * @author S. Grimault
  */
 public abstract class AbstractAsyncTaskLoader<D>
         extends AsyncTaskLoader<D> {
@@ -30,6 +31,7 @@ public abstract class AbstractAsyncTaskLoader<D>
     @Override
     public void deliverResult(D data) {
         result = data;
+
         super.deliverResult(data);
     }
 }

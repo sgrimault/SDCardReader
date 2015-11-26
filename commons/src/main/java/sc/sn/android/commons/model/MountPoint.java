@@ -1,4 +1,4 @@
-package sc.sn.sdcardreader.model;
+package sc.sn.android.commons.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -17,10 +17,7 @@ public class MountPoint
     private final String storageState;
     private final StorageType storageType;
 
-    public MountPoint(
-            String mountPath,
-            String storageState,
-            StorageType storageType) {
+    public MountPoint(String mountPath, String storageState, StorageType storageType) {
         this.mountPath = mountPath;
         this.storageState = storageState;
         this.storageType = storageType;
@@ -48,8 +45,7 @@ public class MountPoint
      * Returns the total size in bytes of the partition containing this path.
      *
      * @return the total size in bytes of the partition containing this path or 0 if this path does not exist
-     *
-     * @see java.io.File#getTotalSpace()
+     * @see File#getTotalSpace()
      */
     public long getTotalSpace() {
         return new File(mountPath).getTotalSpace();
@@ -59,8 +55,7 @@ public class MountPoint
      * Returns the number of free bytes on the partition containing this path.
      *
      * @return the number of free bytes on the partition containing this path or 0 if this path does not exist
-     *
-     * @see java.io.File#getFreeSpace()
+     * @see File#getFreeSpace()
      */
     public long getFreeSpace() {
         return new File(mountPath).getFreeSpace();
@@ -72,9 +67,7 @@ public class MountPoint
     }
 
     @Override
-    public void writeToParcel(
-            Parcel dest,
-            int flags) {
+    public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mountPath);
         dest.writeString(storageState);
         dest.writeSerializable(storageType);

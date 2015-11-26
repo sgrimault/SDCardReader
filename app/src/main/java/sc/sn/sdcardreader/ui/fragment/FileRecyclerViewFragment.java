@@ -8,10 +8,12 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import java.io.File;
 import java.util.List;
@@ -27,7 +29,7 @@ import sc.sn.sdcardreader.ui.adapter.FileListAdapter;
 /**
  * A {@code Fragment} representing a {@code List} of {@code File}s.
  * <p/>
- * Activities containing this {@code Fragment} MUST implement the {@link sc.sn.sdcardreader.ui.fragment.FileRecyclerViewFragment.OnFileRecyclerViewFragmentListener}
+ * Activities containing this {@code Fragment} MUST implement the {@link FileRecyclerViewFragment.OnFileRecyclerViewFragmentListener}
  * interface.
  *
  * @author S. Grimault
@@ -56,19 +58,15 @@ public class FileRecyclerViewFragment
     private final LoaderManager.LoaderCallbacks<List<File>> mFileLoaderCallbacks = new LoaderManager.LoaderCallbacks<List<File>>() {
 
         @Override
-        public Loader<List<File>> onCreateLoader(
-                int id,
-                Bundle args) {
-            return new FileLoader(
-                    getActivity(),
-                    (File) args.getSerializable(ARG_CURRENT_FILE)
-            );
+        public Loader<List<File>> onCreateLoader(int id,
+                                                 Bundle args) {
+            return new FileLoader(getActivity(),
+                                  (File) args.getSerializable(ARG_CURRENT_FILE));
         }
 
         @Override
-        public void onLoadFinished(
-                Loader<List<File>> loader,
-                List<File> data) {
+        public void onLoadFinished(Loader<List<File>> loader,
+                                   List<File> data) {
             mFileListAdapter.clear();
             mFileListAdapter.addAll(data);
         }
@@ -91,7 +89,8 @@ public class FileRecyclerViewFragment
     public static FileRecyclerViewFragment newInstance(File currentPath) {
         final FileRecyclerViewFragment fragment = new FileRecyclerViewFragment();
         final Bundle args = new Bundle();
-        args.putSerializable(ARG_CURRENT_FILE, currentPath);
+        args.putSerializable(ARG_CURRENT_FILE,
+                             currentPath);
 
         fragment.setArguments(args);
 
@@ -111,17 +110,26 @@ public class FileRecyclerViewFragment
         mUserSharedPreferences = new UserSharedPreferences(getActivity());
 
         mFileListAdapter = new FileListAdapter(mOnFileItemListener);
-        mDividerItemDecoration = new DividerItemDecoration(
-                getActivity(),
-                LinearLayoutManager.VERTICAL
-        );
+        mDividerItemDecoration = new DividerItemDecoration(getActivity(),
+                                                           LinearLayoutManager.VERTICAL);
     }
 
     @Override
-    public void onViewCreated(
-            View view,
-            @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        // inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_recycler_view_file,
+                                container,
+                                false);
+    }
+
+    @Override
+    public void onViewCreated(View view,
+                              @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view,
+                            savedInstanceState);
 
         setEmptyText(getString(R.string.file_no_data));
         updateListMode();
@@ -129,15 +137,13 @@ public class FileRecyclerViewFragment
     }
 
     @Override
-    public void onCreateOptionsMenu(
-            Menu menu,
-            MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+    public void onCreateOptionsMenu(Menu menu,
+                                    MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu,
+                                  inflater);
 
-        inflater.inflate(
-                R.menu.menu_item_view_mode,
-                menu
-        );
+        inflater.inflate(R.menu.menu_item_view_mode,
+                         menu);
     }
 
     @Override
@@ -146,18 +152,14 @@ public class FileRecyclerViewFragment
 
         final UserSharedPreferences.RecyclerViewMode recyclerViewMode = mUserSharedPreferences.getRecyclerViewMode();
 
-        int stringResource = getResources().getIdentifier(
-                "view_" + recyclerViewMode.name()
-                                          .toLowerCase(),
-                "string",
-                getActivity().getPackageName()
-        );
-        int drawableResource = getResources().getIdentifier(
-                "ic_action_view_" + recyclerViewMode.name()
-                                                    .toLowerCase(),
-                "drawable",
-                getActivity().getPackageName()
-        );
+        int stringResource = getResources().getIdentifier("view_" + recyclerViewMode.name()
+                                                                                    .toLowerCase(),
+                                                          "string",
+                                                          getActivity().getPackageName());
+        int drawableResource = getResources().getIdentifier("ic_action_view_" + recyclerViewMode.name()
+                                                                                                .toLowerCase(),
+                                                            "drawable",
+                                                            getActivity().getPackageName());
 
         if (stringResource == 0) {
             stringResource = R.string.view_list;
@@ -168,7 +170,8 @@ public class FileRecyclerViewFragment
         }
 
         menu.findItem(R.id.menu_item_view_mode)
-            .setTitle(getString(R.string.menu_item_view_mode, getString(stringResource)))
+            .setTitle(getString(R.string.menu_item_view_mode,
+                                getString(stringResource)))
             .setIcon(drawableResource);
     }
 
@@ -189,11 +192,9 @@ public class FileRecyclerViewFragment
     public void onResume() {
         super.onResume();
 
-        getLoaderManager().initLoader(
-                LOADER_FILE,
-                getArguments(),
-                mFileLoaderCallbacks
-        );
+        getLoaderManager().initLoader(LOADER_FILE,
+                                      getArguments(),
+                                      mFileLoaderCallbacks);
     }
 
     @Override
@@ -218,21 +219,13 @@ public class FileRecyclerViewFragment
     private void updateListMode() {
         switch (mUserSharedPreferences.getRecyclerViewMode()) {
             case LIST:
-                getRecyclerView().setLayoutManager(
-                        new GridLayoutManager(
-                                getActivity(),
-                                1
-                        )
-                );
+                getRecyclerView().setLayoutManager(new GridLayoutManager(getActivity(),
+                                                                         1));
                 getRecyclerView().addItemDecoration(mDividerItemDecoration);
                 break;
             case GRID:
-                getRecyclerView().setLayoutManager(
-                        new AutoSpanGridLayoutManager(
-                                getActivity(),
-                                R.dimen.list_item_file_grid_width
-                        )
-                );
+                getRecyclerView().setLayoutManager(new AutoSpanGridLayoutManager(getActivity(),
+                                                                                 R.dimen.list_item_file_grid_width));
                 getRecyclerView().removeItemDecoration(mDividerItemDecoration);
                 break;
         }
@@ -248,6 +241,6 @@ public class FileRecyclerViewFragment
      */
     public interface OnFileRecyclerViewFragmentListener {
 
-        public void onFileSelected(File file);
+        void onFileSelected(File file);
     }
 }

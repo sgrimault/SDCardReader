@@ -5,11 +5,11 @@ import android.content.Context;
 import java.util.List;
 
 import sc.sn.android.commons.loader.AbstractAsyncTaskLoader;
-import sc.sn.sdcardreader.model.MountPoint;
-import sc.sn.sdcardreader.util.MountPointUtils;
+import sc.sn.android.commons.model.MountPoint;
+import sc.sn.android.commons.util.MountPointUtils;
 
 /**
- * Default {@code Loader} about {@link sc.sn.sdcardreader.model.MountPoint}.
+ * Default {@code Loader} about {@link sc.sn.android.commons.model.MountPoint}.
  *
  * @author S. Grimault
  */

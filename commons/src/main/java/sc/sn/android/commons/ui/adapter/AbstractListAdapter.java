@@ -30,10 +30,8 @@ public abstract class AbstractListAdapter<T, VH extends RecyclerView.ViewHolder>
         mObjects.clear();
 
         if (itemCount > 0) {
-            notifyItemRangeRemoved(
-                    0,
-                    itemCount
-            );
+            notifyItemRangeRemoved(0,
+                                   itemCount);
         }
     }
 
@@ -41,18 +39,15 @@ public abstract class AbstractListAdapter<T, VH extends RecyclerView.ViewHolder>
      * Inserts the specified object at the specified index in the array.
      *
      * @param object the object to insert into the array
-     * @param index the index at which the object must be inserted
+     * @param index  the index at which the object must be inserted
      */
-    public void insert(T object,
-                       int index) {
+    public void insert(T object, int index) {
         if ((index < 0) || (index > mObjects.size())) {
             add(object);
         }
         else {
-            mObjects.add(
-                    index,
-                    object
-            );
+            mObjects.add(index,
+                         object);
             notifyItemInserted(index);
         }
     }
@@ -80,10 +75,8 @@ public abstract class AbstractListAdapter<T, VH extends RecyclerView.ViewHolder>
         int itemCount = getItemCount();
 
         if (mObjects.addAll(collection)) {
-            notifyItemRangeInserted(
-                    itemCount,
-                    collection.size()
-            );
+            notifyItemRangeInserted(itemCount,
+                                    collection.size());
         }
         else {
             notifyDataSetChanged();
@@ -94,7 +87,6 @@ public abstract class AbstractListAdapter<T, VH extends RecyclerView.ViewHolder>
      * Get the object item associated with the specified position in the data set.
      *
      * @param index index of the object to retrieve
-     *
      * @return the object at the specified position
      */
     @Nullable
@@ -118,10 +110,8 @@ public abstract class AbstractListAdapter<T, VH extends RecyclerView.ViewHolder>
             notifyItemRemoved(index);
 
             if (getItemCount() > 0) {
-                notifyItemRangeChanged(
-                        index,
-                        mObjects.size() - index
-                );
+                notifyItemRangeChanged(index,
+                                       mObjects.size() - index);
             }
         }
     }
@@ -140,10 +130,8 @@ public abstract class AbstractListAdapter<T, VH extends RecyclerView.ViewHolder>
             notifyItemRemoved(index);
 
             if (getItemCount() > 0) {
-                notifyItemRangeChanged(
-                        index,
-                        mObjects.size() - index
-                );
+                notifyItemRangeChanged(index,
+                                       mObjects.size() - index);
             }
         }
     }

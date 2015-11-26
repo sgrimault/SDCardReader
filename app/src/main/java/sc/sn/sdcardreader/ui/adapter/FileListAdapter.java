@@ -28,25 +28,19 @@ public class FileListAdapter
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(
-            ViewGroup parent,
-            int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent,
+                                         int viewType) {
         // create a new ViewHolder
-        return new ViewHolder(
-                parent,
-                LayoutInflater.from(parent.getContext())
-                              .inflate(
-                                      R.layout.list_item_file,
-                                      parent,
-                                      false
-                              )
-        );
+        return new ViewHolder(parent,
+                              LayoutInflater.from(parent.getContext())
+                                            .inflate(R.layout.list_item_file,
+                                                     parent,
+                                                     false));
     }
 
     @Override
-    public void onBindViewHolder(
-            ViewHolder holder,
-            int position) {
+    public void onBindViewHolder(ViewHolder holder,
+                                 int position) {
         holder.bind(getItem(position));
     }
 
@@ -55,12 +49,14 @@ public class FileListAdapter
      *
      * @author S. Grimault
      */
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder
+            extends RecyclerView.ViewHolder {
 
         private final RecyclerView mRecyclerView;
         private final TextView mTextViewFileName;
 
-        public ViewHolder(ViewGroup parent, View itemView) {
+        public ViewHolder(ViewGroup parent,
+                          View itemView) {
             super(itemView);
 
             mRecyclerView = (RecyclerView) parent;
@@ -73,41 +69,33 @@ public class FileListAdapter
 
             if (file.isDirectory()) {
                 if (spanCount > 1) {
-                    mTextViewFileName.setCompoundDrawablesWithIntrinsicBounds(
-                            0,
-                            R.drawable.ic_action_file_folder,
-                            0,
-                            0
-                    );
+                    mTextViewFileName.setCompoundDrawablesWithIntrinsicBounds(0,
+                                                                              R.drawable.ic_action_file_folder,
+                                                                              0,
+                                                                              0);
                     mTextViewFileName.setGravity(Gravity.CENTER);
                 }
                 else {
-                    mTextViewFileName.setCompoundDrawablesWithIntrinsicBounds(
-                            R.drawable.ic_action_file_folder,
-                            0,
-                            0,
-                            0
-                    );
+                    mTextViewFileName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_file_folder,
+                                                                              0,
+                                                                              0,
+                                                                              0);
                     mTextViewFileName.setGravity(Gravity.CENTER_VERTICAL);
                 }
             }
             else {
                 if (spanCount > 1) {
-                    mTextViewFileName.setCompoundDrawablesWithIntrinsicBounds(
-                            0,
-                            R.drawable.ic_action_file,
-                            0,
-                            0
-                    );
+                    mTextViewFileName.setCompoundDrawablesWithIntrinsicBounds(0,
+                                                                              R.drawable.ic_action_file,
+                                                                              0,
+                                                                              0);
                     mTextViewFileName.setGravity(Gravity.CENTER);
                 }
                 else {
-                    mTextViewFileName.setCompoundDrawablesWithIntrinsicBounds(
-                            R.drawable.ic_action_file,
-                            0,
-                            0,
-                            0
-                    );
+                    mTextViewFileName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_file,
+                                                                              0,
+                                                                              0,
+                                                                              0);
                     mTextViewFileName.setGravity(Gravity.CENTER_VERTICAL);
                 }
             }

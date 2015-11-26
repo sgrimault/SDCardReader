@@ -15,15 +15,15 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.Robolectric;
-
-import sc.sn.android.commons.CustomRobolectricRunner;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 
 /**
  * Unit tests about {@link sc.sn.android.commons.loader.AbstractAsyncTaskLoader}.
  *
  * @author S. Grimault
  */
-@RunWith(CustomRobolectricRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class AsyncTaskLoaderTest {
 
     private FragmentActivity activity;
@@ -33,7 +33,8 @@ public class AsyncTaskLoaderTest {
     private LoaderManager.LoaderCallbacks<String> dummyAsyncTaskLoaderCallbacks;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws
+                        Exception {
         MockitoAnnotations.initMocks(this);
 
         activity = Robolectric.buildActivity(FragmentActivity.class)
@@ -42,23 +43,30 @@ public class AsyncTaskLoaderTest {
                               .resume()
                               .get();
 
-        dummyAsyncTaskLoader = Mockito.spy(new DummyAsyncTaskLoader(Robolectric.application));
-        Mockito.doReturn(dummyAsyncTaskLoader).when(dummyAsyncTaskLoaderCallbacks).onCreateLoader(Mockito.anyInt(), (Bundle) Mockito.anyObject());
+        dummyAsyncTaskLoader = Mockito.spy(new DummyAsyncTaskLoader(RuntimeEnvironment.application));
+        Mockito.doReturn(dummyAsyncTaskLoader)
+               .when(dummyAsyncTaskLoaderCallbacks)
+               .onCreateLoader(Mockito.anyInt(),
+                               (Bundle) Mockito.anyObject());
     }
+
     @Test
     public void testInitLoader() {
         Assert.assertNull(dummyAsyncTaskLoader.result);
 
-        Loader<String> loader = activity.getSupportLoaderManager().initLoader(
-                0,
-                null,
-                dummyAsyncTaskLoaderCallbacks
-        );
+        Loader<String> loader = activity.getSupportLoaderManager()
+                                        .initLoader(0,
+                                                    null,
+                                                    dummyAsyncTaskLoaderCallbacks);
 
         Assert.assertNotNull(loader);
 
-        Mockito.verify(dummyAsyncTaskLoader, Mockito.times(1)).onStartLoading();
-        Mockito.verify(dummyAsyncTaskLoader, Mockito.times(1)).forceLoad();
+        Mockito.verify(dummyAsyncTaskLoader,
+                       Mockito.times(1))
+               .onStartLoading();
+        Mockito.verify(dummyAsyncTaskLoader,
+                       Mockito.times(1))
+               .forceLoad();
     }
 
     /**
@@ -66,7 +74,8 @@ public class AsyncTaskLoaderTest {
      *
      * @author S. Grimault
      */
-    class DummyAsyncTaskLoader extends AbstractAsyncTaskLoader<String> {
+    class DummyAsyncTaskLoader
+            extends AbstractAsyncTaskLoader<String> {
 
         final static String RESULT = "result";
 

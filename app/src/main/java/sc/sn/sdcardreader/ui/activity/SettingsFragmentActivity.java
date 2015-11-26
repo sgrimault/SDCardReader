@@ -4,15 +4,12 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 
-import java.text.DateFormat;
-import java.util.Date;
-
-import sc.sn.sdcardreader.BuildConfig;
 import sc.sn.sdcardreader.R;
+import sc.sn.sdcardreader.util.PreferenceUtils;
 
 /**
  * Global preferences.
@@ -21,7 +18,7 @@ import sc.sn.sdcardreader.R;
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class SettingsFragmentActivity
-        extends ActionBarActivity {
+        extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +60,6 @@ public class SettingsFragmentActivity
     public static class SettingsFragment
             extends PreferenceFragment {
 
-        private static final String KEY_PREFERENCE_ABOUT_APP_VERSION = "app_version";
-
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -80,18 +75,7 @@ public class SettingsFragmentActivity
                     savedInstanceState
             );
 
-            getPreferenceScreen().findPreference(KEY_PREFERENCE_ABOUT_APP_VERSION)
-                                 .setSummary(
-                                         getString(
-                                                 R.string.app_version,
-                                                 BuildConfig.VERSION_NAME,
-                                                 BuildConfig.VERSION_CODE,
-                                                 DateFormat.getDateTimeInstance()
-                                                           .format(
-                                                                   new Date(Long.valueOf(BuildConfig.BUILD_DATE))
-                                                           )
-                                         )
-                                 );
+            PreferenceUtils.updatePreferences(getPreferenceScreen());
         }
     }
 }

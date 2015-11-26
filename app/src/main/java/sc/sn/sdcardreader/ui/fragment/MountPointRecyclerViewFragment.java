@@ -9,14 +9,13 @@ import android.view.View;
 
 import java.util.List;
 
+import sc.sn.android.commons.model.MountPoint;
 import sc.sn.android.commons.ui.fragment.RecyclerViewFragment;
-import sc.sn.android.commons.ui.recyclerview.SlideInOutBottomItemAnimator;
 import sc.sn.sdcardreader.loader.MountPointLoader;
-import sc.sn.sdcardreader.model.MountPoint;
 import sc.sn.sdcardreader.ui.adapter.MountPointAdapter;
 
 /**
- * A {@code Fragment} representing a {@code List} of {@link sc.sn.sdcardreader.model.MountPoint}s.
+ * A {@code Fragment} representing a {@code List} of {@link MountPoint}s.
  * <p/>
  * Activities containing this {@code Fragment} MUST implement the {@link sc.sn.sdcardreader.ui.fragment.MountPointRecyclerViewFragment.OnMountPointRecyclerViewFragmentListener}
  * interface.
@@ -45,16 +44,14 @@ public class MountPointRecyclerViewFragment
     private final LoaderManager.LoaderCallbacks<List<MountPoint>> mMountPointLoaderCallbacks = new LoaderManager.LoaderCallbacks<List<MountPoint>>() {
 
         @Override
-        public Loader<List<MountPoint>> onCreateLoader(
-                int id,
-                Bundle args) {
+        public Loader<List<MountPoint>> onCreateLoader(int id,
+                                                       Bundle args) {
             return new MountPointLoader(getActivity());
         }
 
         @Override
-        public void onLoadFinished(
-                Loader<List<MountPoint>> loader,
-                List<MountPoint> data) {
+        public void onLoadFinished(Loader<List<MountPoint>> loader,
+                                   List<MountPoint> data) {
 
             mMountPointAdapter.clear();
             mMountPointAdapter.addAll(data);
@@ -88,33 +85,29 @@ public class MountPointRecyclerViewFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mMountPointAdapter = new MountPointAdapter(
-                getActivity(),
-                mOnMountPointItemListener
-        );
+        mMountPointAdapter = new MountPointAdapter(mOnMountPointItemListener);
     }
 
     @Override
-    public void onViewCreated(
-            View view,
-            @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onViewCreated(View view,
+                              @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view,
+                            savedInstanceState);
 
         setRecyclerViewAdapter(mMountPointAdapter);
-        getRecyclerView().setItemAnimator(new SlideInOutBottomItemAnimator(getRecyclerView()));
-        getRecyclerView().getItemAnimator().setAddDuration(500);
-        getRecyclerView().getItemAnimator().setChangeDuration(500);
+        getRecyclerView().getItemAnimator()
+                         .setAddDuration(500);
+        getRecyclerView().getItemAnimator()
+                         .setChangeDuration(500);
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        getLoaderManager().initLoader(
-                LOADER_MOUNT_POINT,
-                getArguments(),
-                mMountPointLoaderCallbacks
-        );
+        getLoaderManager().initLoader(LOADER_MOUNT_POINT,
+                                      getArguments(),
+                                      mMountPointLoaderCallbacks);
     }
 
     @Override

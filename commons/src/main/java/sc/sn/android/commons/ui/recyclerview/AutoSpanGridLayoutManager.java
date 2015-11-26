@@ -15,30 +15,24 @@ public class AutoSpanGridLayoutManager
 
     private int mSpanWidth;
 
-    public AutoSpanGridLayoutManager(
-            Context context,
-            int spanWidthResource) {
-        super(
-                context,
-                DEFAULT_SPAN_COUNT
-        );
+    public AutoSpanGridLayoutManager(Context context,
+                                     int spanWidthResource) {
+        super(context,
+              DEFAULT_SPAN_COUNT);
 
         mSpanWidth = context.getResources()
                             .getDimensionPixelSize(spanWidthResource);
     }
 
     @Override
-    public void onMeasure(
-            RecyclerView.Recycler recycler,
-            RecyclerView.State state,
-            int widthSpec,
-            int heightSpec) {
-        super.onMeasure(
-                recycler,
-                state,
-                widthSpec,
-                heightSpec
-        );
+    public void onMeasure(RecyclerView.Recycler recycler,
+                          RecyclerView.State state,
+                          int widthSpec,
+                          int heightSpec) {
+        super.onMeasure(recycler,
+                        state,
+                        widthSpec,
+                        heightSpec);
 
         int width = View.MeasureSpec.getSize(widthSpec);
 

@@ -4,11 +4,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.support.annotation.Nullable;
-import android.support.v7.internal.widget.TintCheckBox;
-import android.support.v7.internal.widget.TintCheckedTextView;
-import android.support.v7.internal.widget.TintEditText;
-import android.support.v7.internal.widget.TintRadioButton;
-import android.support.v7.internal.widget.TintSpinner;
+import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.AppCompatCheckedTextView;
+import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatRadioButton;
+import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -18,12 +18,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import java.text.DateFormat;
-import java.util.Date;
-
 import sc.sn.android.commons.util.DeviceUtils;
-import sc.sn.sdcardreader.BuildConfig;
 import sc.sn.sdcardreader.R;
+import sc.sn.sdcardreader.util.PreferenceUtils;
 
 /**
  * Global preferences.
@@ -33,8 +30,6 @@ import sc.sn.sdcardreader.R;
 public class SettingsActivity
         extends PreferenceActivity {
 
-    private static final String KEY_PREFERENCE_ABOUT_APP_VERSION = "app_version";
-
     @Override
     @SuppressWarnings("deprecation")
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,18 +38,7 @@ public class SettingsActivity
         // backward compatibility for Android 2.3.x
         addPreferencesFromResource(R.xml.preferences);
 
-        getPreferenceScreen().findPreference(KEY_PREFERENCE_ABOUT_APP_VERSION)
-                             .setSummary(
-                                     getString(
-                                             R.string.app_version,
-                                             BuildConfig.VERSION_NAME,
-                                             BuildConfig.VERSION_CODE,
-                                             DateFormat.getDateTimeInstance()
-                                                       .format(
-                                                               new Date(Long.valueOf(BuildConfig.BUILD_DATE))
-                                                       )
-                                     )
-                             );
+        PreferenceUtils.updatePreferences(getPreferenceScreen());
     }
 
     @Override
@@ -70,11 +54,9 @@ public class SettingsActivity
                              Context context,
                              AttributeSet attrs) {
         // allow super to try and create a view first
-        final View result = super.onCreateView(
-                name,
-                context,
-                attrs
-        );
+        final View result = super.onCreateView(name,
+                                               context,
+                                               attrs);
 
         if (result != null) {
             return result;
@@ -84,30 +66,20 @@ public class SettingsActivity
             // if we're running pre-Lollipop, we need to 'inject' our tint aware Views in place of the standard framework versions
             switch (name) {
                 case "EditText":
-                    return new TintEditText(
-                            this,
-                            attrs
-                    );
+                    return new AppCompatEditText(this,
+                                                 attrs);
                 case "Spinner":
-                    return new TintSpinner(
-                            this,
-                            attrs
-                    );
+                    return new AppCompatSpinner(this,
+                                                attrs);
                 case "CheckBox":
-                    return new TintCheckBox(
-                            this,
-                            attrs
-                    );
+                    return new AppCompatCheckBox(this,
+                                                 attrs);
                 case "RadioButton":
-                    return new TintRadioButton(
-                            this,
-                            attrs
-                    );
+                    return new AppCompatRadioButton(this,
+                                                    attrs);
                 case "CheckedTextView":
-                    return new TintCheckedTextView(
-                            this,
-                            attrs
-                    );
+                    return new AppCompatCheckedTextView(this,
+                                                        attrs);
             }
         }
 
@@ -121,17 +93,14 @@ public class SettingsActivity
             final LinearLayout root = (LinearLayout) findViewById(android.R.id.list).getParent()
                                                                                     .getParent()
                                                                                     .getParent();
-            toolbar = (Toolbar) LayoutInflater.from(this).inflate(
-                    R.layout.toolbar_settings,
-                    root,
-                    false
-            );
+            toolbar = (Toolbar) LayoutInflater.from(this)
+                                              .inflate(R.layout.toolbar_settings,
+                                                       root,
+                                                       false);
 
             // insert at top
-            root.addView(
-                    toolbar,
-                    0
-            );
+            root.addView(toolbar,
+                         0);
         }
         else {
             final ViewGroup root = (ViewGroup) findViewById(android.R.id.content);
@@ -139,47 +108,38 @@ public class SettingsActivity
 
             root.removeAllViews();
 
-            toolbar = (Toolbar) LayoutInflater.from(this).inflate(
-                    R.layout.toolbar_settings,
-                    root,
-                    false
-            );
+            toolbar = (Toolbar) LayoutInflater.from(this)
+                                              .inflate(R.layout.toolbar_settings,
+                                                       root,
+                                                       false);
 
             int height;
             TypedValue tv = new TypedValue();
 
-            if (getTheme().resolveAttribute(
-                    R.attr.actionBarSize,
-                    tv,
-                    true
-            )) {
-                height = TypedValue.complexToDimensionPixelSize(
-                        tv.data,
-                        getResources().getDisplayMetrics()
-                );
+            if (getTheme().resolveAttribute(R.attr.actionBarSize,
+                                            tv,
+                                            true)) {
+                height = TypedValue.complexToDimensionPixelSize(tv.data,
+                                                                getResources().getDisplayMetrics());
             }
             else {
                 height = toolbar.getHeight();
             }
 
-            content.setPadding(
-                    0,
-                    height,
-                    0,
-                    0
-            );
+            content.setPadding(0,
+                               height,
+                               0,
+                               0);
 
             root.addView(content);
             root.addView(toolbar);
         }
 
-        toolbar.setNavigationOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        finish();
-                    }
-                }
-        );
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                                                 @Override
+                                                 public void onClick(View v) {
+                                                     finish();
+                                                 }
+                                             });
     }
 }
