@@ -252,6 +252,40 @@ public class ListAdapterTest {
                                                  1);
     }
 
+    @Test
+    public void testFilter() throws
+                             Exception {
+        final String item1 = "it1";
+        final String item2 = "item2";
+        final String item3 = "item3";
+        final String item4 = "value4";
+        final String item5 = "value5";
+
+        stringListAdapter.addAll(Arrays.asList(item1,
+                                               item2,
+                                               item3,
+                                               item4,
+                                               item5));
+
+        assertEquals(5,
+                     stringListAdapter.getItemCount());
+
+        stringListAdapter.getFilter().filter("it");
+
+        assertEquals(3,
+                     stringListAdapter.getItemCount());
+
+        stringListAdapter.getFilter().filter("ite");
+
+        assertEquals(2,
+                     stringListAdapter.getItemCount());
+
+        stringListAdapter.getFilter().filter(null);
+
+        assertEquals(5,
+                     stringListAdapter.getItemCount());
+    }
+
     /**
      * Simple {@link AbstractListAdapter} using {@code String} as values.
      *

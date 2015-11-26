@@ -2,6 +2,7 @@ package sc.sn.android.commons.ui.adapter;
 
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.widget.Filter;
 import android.widget.Filterable;
 
@@ -315,7 +316,7 @@ public abstract class AbstractListAdapter<T, VH extends RecyclerView.ViewHolder>
                 }
             }
 
-            if (prefix == null || prefix.length() == 0) {
+            if (TextUtils.isEmpty(prefix)) {
                 ArrayList<T> list;
 
                 synchronized (mLock) {
