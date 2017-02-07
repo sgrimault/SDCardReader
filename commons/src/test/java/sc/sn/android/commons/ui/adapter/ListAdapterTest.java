@@ -1,7 +1,6 @@
 package sc.sn.android.commons.ui.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -12,9 +11,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.robolectric.RobolectricTestRunner;
 
-import java.util.Arrays;
 import java.util.List;
 
+import static android.view.LayoutInflater.from;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.atLeastOnce;
@@ -48,8 +48,8 @@ public class ListAdapterTest {
 
     @Test
     public void testClear() {
-        final List<String> values = Arrays.asList("value1",
-                                                  "value2");
+        final List<String> values = asList("value1",
+                                           "value2");
 
         stringListAdapter.addAll(values);
         stringListAdapter.clear();
@@ -160,8 +160,8 @@ public class ListAdapterTest {
         assertEquals(0,
                      stringListAdapter.getItemCount());
 
-        final List<String> values = Arrays.asList("value1",
-                                                  "value2");
+        final List<String> values = asList("value1",
+                                           "value2");
         stringListAdapter.addAll(values);
 
         verify(stringListAdapter,
@@ -185,8 +185,8 @@ public class ListAdapterTest {
         final String valueNotFound = stringListAdapter.getItem(0);
         assertNull(valueNotFound);
 
-        final List<String> values = Arrays.asList("value1",
-                                                  "value2");
+        final List<String> values = asList("value1",
+                                           "value2");
 
         stringListAdapter.addAll(values);
         assertEquals(values.get(0),
@@ -261,26 +261,29 @@ public class ListAdapterTest {
         final String item4 = "value4";
         final String item5 = "value5";
 
-        stringListAdapter.addAll(Arrays.asList(item1,
-                                               item2,
-                                               item3,
-                                               item4,
-                                               item5));
+        stringListAdapter.addAll(asList(item1,
+                                        item2,
+                                        item3,
+                                        item4,
+                                        item5));
 
         assertEquals(5,
                      stringListAdapter.getItemCount());
 
-        stringListAdapter.getFilter().filter("it");
+        stringListAdapter.getFilter()
+                         .filter("it");
 
         assertEquals(3,
                      stringListAdapter.getItemCount());
 
-        stringListAdapter.getFilter().filter("ite");
+        stringListAdapter.getFilter()
+                         .filter("ite");
 
         assertEquals(2,
                      stringListAdapter.getItemCount());
 
-        stringListAdapter.getFilter().filter(null);
+        stringListAdapter.getFilter()
+                         .filter(null);
 
         assertEquals(5,
                      stringListAdapter.getItemCount());
@@ -298,10 +301,9 @@ public class ListAdapterTest {
         public ViewHolder onCreateViewHolder(ViewGroup parent,
                                              int viewType) {
             // create a new ViewHolder
-            return new ViewHolder(LayoutInflater.from(parent.getContext())
-                                                .inflate(android.R.layout.simple_list_item_1,
-                                                         parent,
-                                                         false));
+            return new ViewHolder(from(parent.getContext()).inflate(android.R.layout.simple_list_item_1,
+                                                                    parent,
+                                                                    false));
         }
 
         @Override
@@ -326,7 +328,7 @@ public class ListAdapterTest {
                 mTextView = (TextView) itemView.findViewById(android.R.id.text1);
             }
 
-            public void bind(final String value) {
+            void bind(final String value) {
                 mTextView.setText(value);
             }
         }
