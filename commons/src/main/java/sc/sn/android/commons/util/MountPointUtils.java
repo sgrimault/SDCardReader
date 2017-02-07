@@ -323,7 +323,11 @@ public class MountPointUtils {
                                            MountPoint.StorageType.INTERNAL));
         }
 
-        final String secondaryStorage = System.getenv("SECONDARY_STORAGE");
+        String secondaryStorage = System.getenv("SECONDARY_STORAGE");
+
+        if (TextUtils.isEmpty(secondaryStorage)) {
+            secondaryStorage = System.getenv("EXTERNAL_SDCARD_STORAGE");
+        }
 
         if (!TextUtils.isEmpty(secondaryStorage)) {
             final String[] paths = secondaryStorage.split(":");
