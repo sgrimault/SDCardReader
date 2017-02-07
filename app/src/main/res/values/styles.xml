@@ -5,9 +5,9 @@
 
         <!-- main theme colors -->
         <item name="android:textColorSecondary">@color/textColorSecondary</item>
-
+        <!--
         <item name="actionBarStyle">@style/AppTheme.ActionBarStyle</item>
-
+        -->
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
 
     </style>
