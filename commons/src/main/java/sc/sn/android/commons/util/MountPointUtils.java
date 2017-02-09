@@ -9,12 +9,17 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Scanner;
+import java.util.Set;
 
+import sc.sn.android.commons.BuildConfig;
 import sc.sn.android.commons.R;
 import sc.sn.android.commons.model.MountPoint;
 
@@ -24,6 +29,8 @@ import sc.sn.android.commons.model.MountPoint;
  * @author S. Grimault
  */
 public class MountPointUtils {
+
+    private static final String TAG = MountPointUtils.class.getName();
 
     /**
      * Return the primary external storage as {@link MountPoint}.
@@ -35,15 +42,29 @@ public class MountPointUtils {
         final String externalStorage = System.getenv("EXTERNAL_STORAGE");
 
         if (TextUtils.isEmpty(externalStorage)) {
-            return new MountPoint(Environment.getExternalStorageDirectory()
-                                             .getAbsolutePath(),
-                                  Environment.getExternalStorageState(),
-                                  MountPoint.StorageType.INTERNAL);
+            final MountPoint mountPoint = new MountPoint(Environment.getExternalStorageDirectory()
+                                                                    .getAbsolutePath(),
+                                                         Environment.getExternalStorageState(),
+                                                         MountPoint.StorageType.INTERNAL);
+
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG,
+                      "internal storage from API: " + mountPoint);
+            }
+
+            return mountPoint;
         }
         else {
-            return new MountPoint(externalStorage,
-                                  Environment.getExternalStorageState(),
-                                  MountPoint.StorageType.INTERNAL);
+            final MountPoint mountPoint = new MountPoint(externalStorage,
+                                                         Environment.getExternalStorageState(),
+                                                         MountPoint.StorageType.INTERNAL);
+
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG,
+                      "internal storage from system environment: " + mountPoint);
+            }
+
+            return mountPoint;
         }
     }
 
@@ -51,30 +72,29 @@ public class MountPointUtils {
      * Return the secondary external storage as {@link MountPoint} if found.
      *
      * @return the secondary external storage or {@code null} if not found
+     *
+     * @see #getMountPoints()
      */
     @Nullable
     public static MountPoint getExternalStorage() {
-        // try to found the secondary external storage using System environment
-        final List<MountPoint> mountPoints = getMountPointsFromSystemEnv();
-        Iterator<MountPoint> mountPointIterator = mountPoints.iterator();
+        final List<MountPoint> mountPoints = getMountPoints();
+        final Iterator<MountPoint> mountPointIterator = mountPoints.iterator();
         MountPoint externalMountPoint = null;
 
         while (mountPointIterator.hasNext() && (externalMountPoint == null)) {
             final MountPoint mountPoint = mountPointIterator.next();
-            externalMountPoint = (mountPoint.getStorageType()
-                                            .equals(MountPoint.StorageType.EXTERNAL) ? mountPoint : null);
+            externalMountPoint = mountPoint.getStorageType()
+                                           .equals(MountPoint.StorageType.EXTERNAL) ? mountPoint : null;
         }
 
-        // fallback: parse file 'vold.fstab' and try to find the secondary external storage
-        if (externalMountPoint == null) {
-            mountPoints.clear();
-            mountPoints.addAll(getMountPointsFromVold());
-            mountPointIterator = mountPoints.iterator();
-
-            while (mountPointIterator.hasNext() && (externalMountPoint == null)) {
-                MountPoint mountPoint = mountPointIterator.next();
-                externalMountPoint = (mountPoint.getStorageType()
-                                                .equals(MountPoint.StorageType.EXTERNAL) ? mountPoint : null);
+        if (BuildConfig.DEBUG) {
+            if (externalMountPoint == null) {
+                Log.d(TAG,
+                      "external storage not found");
+            }
+            else {
+                Log.d(TAG,
+                      "external storage found: " + externalMountPoint);
             }
         }
 
@@ -85,26 +105,45 @@ public class MountPointUtils {
      * Retrieves a {@code List} of all available {@link MountPoint}s
      *
      * @return a {@code List} of available {@link MountPoint}s
+     *
      * @see #getMountPointsFromSystemEnv()
      * @see #getMountPointsFromVold()
+     * @see #getMountPointsFromProcMounts()
      */
     @NonNull
     public static List<MountPoint> getMountPoints() {
-        final List<MountPoint> mountPoints = getMountPointsFromSystemEnv();
+        final Set<MountPoint> mountPoints = new HashSet<>();
 
-        // fallback: parse file 'vold.fstab' and try to find all external storage
-        if (mountPoints.size() == 1) {
+        // first: add the primary external storage
+        mountPoints.add(getInternalStorage());
+
+        // then: find all MountPoints from System environment
+        final List<MountPoint> mountPointsFromSystemEnv = getMountPointsFromSystemEnv();
+        mountPoints.addAll(mountPointsFromSystemEnv);
+
+        // fallback: try to find all externals storage from 'vold.fstab'
+        if (mountPointsFromSystemEnv.isEmpty()) {
             final List<MountPoint> mountPointsFromVold = getMountPointsFromVold();
+            final List<MountPoint> filteredMountPointsFromVold = new ArrayList<>();
 
+            // keep only all secondary externals storage found
             for (MountPoint mountPoint : mountPointsFromVold) {
                 if (!mountPoint.getStorageType()
                                .equals(MountPoint.StorageType.INTERNAL)) {
-                    mountPoints.add(mountPoint);
+                    filteredMountPointsFromVold.add(mountPoint);
                 }
+            }
+
+            mountPoints.addAll(filteredMountPointsFromVold);
+
+            // fallback: try to find all externals storage from '/proc/mounts'
+            if (filteredMountPointsFromVold.isEmpty()) {
+                final List<MountPoint> mountPointsFromProcMounts = getMountPointsFromProcMounts();
+                mountPoints.addAll(mountPointsFromProcMounts);
             }
         }
 
-        return mountPoints;
+        return new ArrayList<>(mountPoints);
     }
 
     /**
@@ -115,6 +154,7 @@ public class MountPointUtils {
      * </ul>
      *
      * @param mountPoint the given {@link MountPoint} to check
+     *
      * @return {@code true} if the gieven {@link MountPoint} is mounted, {@code false} otherwise
      */
     public static boolean isMounted(@NonNull final MountPoint mountPoint) {
@@ -128,6 +168,7 @@ public class MountPointUtils {
      *
      * @param context     the current context
      * @param storageSize the storage size in bytes to format
+     *
      * @return a human representation of the storage size
      */
     @NonNull
@@ -170,6 +211,7 @@ public class MountPointUtils {
      *
      * @param context the current context
      * @param status  the storage status
+     *
      * @return a human representation of the storage status
      */
     @NonNull
@@ -188,13 +230,73 @@ public class MountPointUtils {
     }
 
     /**
+     * Retrieves a {@code List} of {@link MountPoint}s from {@code System}
+     * environment.
+     *
+     * @return a {@code List} of available {@link MountPoint}s
+     */
+    @NonNull
+    private static List<MountPoint> getMountPointsFromSystemEnv() {
+        final List<MountPoint> mountPoints = new ArrayList<>();
+
+        String secondaryStorage = System.getenv("SECONDARY_STORAGE");
+
+        if (TextUtils.isEmpty(secondaryStorage)) {
+            secondaryStorage = System.getenv("EXTERNAL_SDCARD_STORAGE");
+        }
+
+        if (!TextUtils.isEmpty(secondaryStorage)) {
+            final String[] paths = secondaryStorage.split(":");
+            boolean firstSecondaryStorage = true;
+
+            for (String path : paths) {
+                final File file = new File(path);
+                String storageState = Environment.MEDIA_UNMOUNTED;
+
+                if (file.isDirectory()) {
+
+                    if (file.canWrite()) {
+                        storageState = Environment.MEDIA_MOUNTED;
+                    }
+                    else if (file.canRead()) {
+                        storageState = Environment.MEDIA_MOUNTED_READ_ONLY;
+                    }
+
+                    final MountPoint mountPoint = new MountPoint(path,
+                                                                 storageState,
+                                                                 (firstSecondaryStorage) ? MountPoint.StorageType.EXTERNAL : MountPoint.StorageType.USB);
+
+                    if (BuildConfig.DEBUG) {
+                        if (BuildConfig.DEBUG) {
+                            Log.d(TAG,
+                                  "mount point found from system environment: " + mountPoint);
+                        }
+                    }
+
+                    mountPoints.add(mountPoint);
+                    firstSecondaryStorage = false;
+                }
+            }
+        }
+
+        if (BuildConfig.DEBUG) {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG,
+                      "mount points found from system environment: " + mountPoints.size());
+            }
+        }
+
+        return mountPoints;
+    }
+
+    /**
      * Retrieves a {@code List} of {@link MountPoint}s from
      * {@code 'vold.fstab'} system file.
      *
      * @return a {@code List} of available {@link MountPoint}s
      */
     @NonNull
-    static List<MountPoint> getMountPointsFromVold() {
+    private static List<MountPoint> getMountPointsFromVold() {
         final List<MountPoint> mountPoints = new ArrayList<>();
         final File voldFstabFile = new File("/system/etc/vold.fstab");
         FileReader fileReader = null;
@@ -258,18 +360,26 @@ public class MountPointUtils {
                                     storageState = Environment.MEDIA_MOUNTED_READ_ONLY;
                                 }
 
-                                mountPoints.add(new MountPoint(tokens[2],
-                                                               storageState,
-                                                               storageType));
+                                final MountPoint mountPoint = new MountPoint(tokens[2],
+                                                                             storageState,
+                                                                             storageType);
+
+                                if (BuildConfig.DEBUG) {
+                                    if (BuildConfig.DEBUG) {
+                                        Log.d(TAG,
+                                              "mount point found from '" + voldFstabFile.getAbsolutePath() + "': " + mountPoint);
+                                    }
+                                }
+
+                                mountPoints.add(mountPoint);
                             }
                         }
                     }
                 }
             }
             catch (IOException ioe) {
-                Log.w(MountPointUtils.class.getName(),
-                      ioe.getMessage(),
-                      ioe);
+                Log.w(TAG,
+                      ioe.getMessage());
             }
             finally {
                 if (fileReader != null) {
@@ -277,9 +387,8 @@ public class MountPointUtils {
                         fileReader.close();
                     }
                     catch (IOException ioe) {
-                        Log.w(MountPointUtils.class.getName(),
-                              ioe.getMessage(),
-                              ioe);
+                        Log.w(TAG,
+                              ioe.getMessage());
                     }
                 }
 
@@ -288,11 +397,23 @@ public class MountPointUtils {
                         bufferedReader.close();
                     }
                     catch (IOException ioe) {
-                        Log.w(MountPointUtils.class.getName(),
-                              ioe.getMessage(),
-                              ioe);
+                        Log.w(TAG,
+                              ioe.getMessage());
                     }
                 }
+            }
+        }
+        else {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG,
+                      "'" + voldFstabFile.getAbsolutePath() + "' not found");
+            }
+        }
+
+        if (BuildConfig.DEBUG) {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG,
+                      "mount points found from 'vold.fstab': " + mountPoints.size());
             }
         }
 
@@ -300,57 +421,62 @@ public class MountPointUtils {
     }
 
     /**
-     * Retrieves a {@code List} of {@link MountPoint}s from {@code System}
-     * environment.
+     * Retrieves a {@code List} of {@link MountPoint}s from
+     * {@code '/proc/mounts'} system file.
      *
      * @return a {@code List} of available {@link MountPoint}s
      */
     @NonNull
-    static List<MountPoint> getMountPointsFromSystemEnv() {
+    private static List<MountPoint> getMountPointsFromProcMounts() {
         final List<MountPoint> mountPoints = new ArrayList<>();
 
-        final String externalStorage = System.getenv("EXTERNAL_STORAGE");
+        try {
+            final Scanner scanner = new Scanner(new File("/proc/mounts"));
 
-        if (TextUtils.isEmpty(externalStorage)) {
-            mountPoints.add(new MountPoint(Environment.getExternalStorageDirectory()
-                                                      .getAbsolutePath(),
-                                           Environment.getExternalStorageState(),
-                                           MountPoint.StorageType.INTERNAL));
-        }
-        else {
-            mountPoints.add(new MountPoint(externalStorage,
-                                           Environment.getExternalStorageState(),
-                                           MountPoint.StorageType.INTERNAL));
-        }
+            while (scanner.hasNext()) {
+                final String line = scanner.nextLine();
 
-        String secondaryStorage = System.getenv("SECONDARY_STORAGE");
+                if (line.startsWith("/dev/block/vold") || line.startsWith("/dev/fuse")) {
+                    final String[] tokens = line.split("\\s");
 
-        if (TextUtils.isEmpty(secondaryStorage)) {
-            secondaryStorage = System.getenv("EXTERNAL_SDCARD_STORAGE");
-        }
+                    if (tokens.length >= 2) {
+                        final File mountPath = new File(tokens[1]);
+                        String storageState = Environment.MEDIA_UNMOUNTED;
 
-        if (!TextUtils.isEmpty(secondaryStorage)) {
-            final String[] paths = secondaryStorage.split(":");
-            boolean firstSecondaryStorage = true;
+                        if (mountPath.isDirectory()) {
+                            if (mountPath.canWrite()) {
+                                storageState = Environment.MEDIA_MOUNTED;
+                            }
+                            else if (mountPath.canRead()) {
+                                storageState = Environment.MEDIA_MOUNTED_READ_ONLY;
+                            }
 
-            for (String path : paths) {
-                final File file = new File(path);
-                String storageState = Environment.MEDIA_UNMOUNTED;
+                            final MountPoint mountPoint = new MountPoint(tokens[1],
+                                                                         storageState,
+                                                                         MountPoint.StorageType.EXTERNAL);
 
-                if (file.isDirectory()) {
+                            if (BuildConfig.DEBUG) {
+                                if (BuildConfig.DEBUG) {
+                                    Log.d(TAG,
+                                          "mount point found from '/proc/mounts': " + mountPoint);
+                                }
+                            }
 
-                    if (file.canWrite()) {
-                        storageState = Environment.MEDIA_MOUNTED;
+                            mountPoints.add(mountPoint);
+                        }
                     }
-                    else if (file.canRead()) {
-                        storageState = Environment.MEDIA_MOUNTED_READ_ONLY;
-                    }
-
-                    mountPoints.add(new MountPoint(path,
-                                                   storageState,
-                                                   (firstSecondaryStorage) ? MountPoint.StorageType.EXTERNAL : MountPoint.StorageType.USB));
-                    firstSecondaryStorage = false;
                 }
+            }
+        }
+        catch (FileNotFoundException fnfe) {
+            Log.w(TAG,
+                  fnfe.getMessage());
+        }
+
+        if (BuildConfig.DEBUG) {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG,
+                      "mount points found from '/proc/mounts': " + mountPoints.size());
             }
         }
 

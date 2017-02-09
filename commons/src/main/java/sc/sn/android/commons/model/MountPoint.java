@@ -2,6 +2,7 @@ package sc.sn.android.commons.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import java.io.File;
 
@@ -17,7 +18,9 @@ public class MountPoint
     private final String storageState;
     private final StorageType storageType;
 
-    public MountPoint(String mountPath, String storageState, StorageType storageType) {
+    public MountPoint(@NonNull final String mountPath,
+                      @NonNull final String storageState,
+                      @NonNull final StorageType storageType) {
         this.mountPath = mountPath;
         this.storageState = storageState;
         this.storageType = storageType;
@@ -29,14 +32,17 @@ public class MountPoint
         this.storageType = (StorageType) source.readSerializable();
     }
 
+    @NonNull
     public String getMountPath() {
         return mountPath;
     }
 
+    @NonNull
     public String getStorageState() {
         return storageState;
     }
 
+    @NonNull
     public StorageType getStorageType() {
         return storageType;
     }
@@ -45,6 +51,7 @@ public class MountPoint
      * Returns the total size in bytes of the partition containing this path.
      *
      * @return the total size in bytes of the partition containing this path or 0 if this path does not exist
+     *
      * @see File#getTotalSpace()
      */
     public long getTotalSpace() {
@@ -55,6 +62,7 @@ public class MountPoint
      * Returns the number of free bytes on the partition containing this path.
      *
      * @return the number of free bytes on the partition containing this path or 0 if this path does not exist
+     *
      * @see File#getFreeSpace()
      */
     public long getFreeSpace() {
@@ -67,10 +75,40 @@ public class MountPoint
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(Parcel dest,
+                              int flags) {
         dest.writeString(mountPath);
         dest.writeString(storageState);
         dest.writeSerializable(storageType);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        MountPoint that = (MountPoint) o;
+
+        return mountPath.equals(that.mountPath);
+    }
+
+    @Override
+    public int hashCode() {
+        return mountPath.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "MountPoint{" +
+                "mountPath='" + mountPath + '\'' +
+                ", storageState='" + storageState + '\'' +
+                ", storageType=" + storageType +
+                '}';
     }
 
     /**
