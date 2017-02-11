@@ -1,6 +1,6 @@
 package sc.sn.sdcardreader.ui.fragment;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -198,14 +198,14 @@ public class FileRecyclerViewFragment
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
 
         try {
-            mOnFileRecyclerViewFragmentListener = (OnFileRecyclerViewFragmentListener) activity;
+            mOnFileRecyclerViewFragmentListener = (OnFileRecyclerViewFragmentListener) context;
         }
         catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement " + OnFileRecyclerViewFragmentListener.class.getName());
+            throw new ClassCastException(context.toString() + " must implement " + OnFileRecyclerViewFragmentListener.class.getName());
         }
     }
 

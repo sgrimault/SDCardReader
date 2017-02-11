@@ -27,10 +27,7 @@ import android.view.View;
 public class DividerItemDecoration
         extends RecyclerView.ItemDecoration {
 
-    private static final int[] ATTRS = new int[]{android.R.attr.listDivider};
-
-    public static final int HORIZONTAL_LIST = LinearLayoutManager.HORIZONTAL;
-    public static final int VERTICAL_LIST = LinearLayoutManager.VERTICAL;
+    private static final int[] ATTRS = new int[] {android.R.attr.listDivider};
 
     private final Drawable mDivider;
     private int mOrientation;
@@ -44,7 +41,7 @@ public class DividerItemDecoration
     }
 
     public void setOrientation(int orientation) {
-        if (orientation != HORIZONTAL_LIST && orientation != VERTICAL_LIST) {
+        if (orientation != LinearLayoutManager.HORIZONTAL && orientation != LinearLayoutManager.VERTICAL) {
             throw new IllegalArgumentException("invalid orientation");
         }
 
@@ -55,7 +52,7 @@ public class DividerItemDecoration
     public void onDraw(Canvas c,
                        RecyclerView parent,
                        RecyclerView.State state) {
-        if (mOrientation == VERTICAL_LIST) {
+        if (mOrientation == LinearLayoutManager.VERTICAL) {
             drawVertical(c,
                          parent);
         }
@@ -65,8 +62,8 @@ public class DividerItemDecoration
         }
     }
 
-    public void drawVertical(Canvas c,
-                             RecyclerView parent) {
+    private void drawVertical(Canvas c,
+                              RecyclerView parent) {
         final int left = parent.getPaddingLeft();
         final int right = parent.getWidth() - parent.getPaddingRight();
         final int childCount = parent.getChildCount();
@@ -84,8 +81,8 @@ public class DividerItemDecoration
         }
     }
 
-    public void drawHorizontal(Canvas c,
-                               RecyclerView parent) {
+    private void drawHorizontal(Canvas c,
+                                RecyclerView parent) {
         final int top = parent.getPaddingTop();
         final int bottom = parent.getHeight() - parent.getPaddingBottom();
         final int childCount = parent.getChildCount();
@@ -108,7 +105,7 @@ public class DividerItemDecoration
                                View view,
                                RecyclerView parent,
                                RecyclerView.State state) {
-        if (mOrientation == VERTICAL_LIST) {
+        if (mOrientation == LinearLayoutManager.VERTICAL) {
             outRect.set(0,
                         0,
                         0,

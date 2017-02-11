@@ -22,7 +22,7 @@ import sc.sn.sdcardreader.R;
 public class SettingsFragment
         extends PreferenceFragmentCompat {
 
-    private static final String TAG = SettingsFragment.class.getSimpleName();
+    private static final String TAG = SettingsFragment.class.getName();
 
     @Override
     public void onCreatePreferences(Bundle bundle,

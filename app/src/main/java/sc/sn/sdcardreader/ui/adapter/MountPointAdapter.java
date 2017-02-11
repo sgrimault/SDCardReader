@@ -47,19 +47,19 @@ public class MountPointAdapter
      *
      * @author S. Grimault
      */
-    public class ViewHolder
+    class ViewHolder
             extends RecyclerView.ViewHolder {
 
-        public final MountPointView mMountPointView;
+        final MountPointView mMountPointView;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
 
             mMountPointView = (MountPointView) itemView.findViewById(R.id.mountPointView);
         }
 
         @SuppressLint("NewApi")
-        public void bind(final MountPoint mountPoint) {
+        void bind(final MountPoint mountPoint) {
             mMountPointView.setMountPoint(mountPoint);
 
             final boolean enabled = MountPointUtils.isMounted(mountPoint);
@@ -68,11 +68,11 @@ public class MountPointAdapter
                 if (mOnMountPointItemListener != null) {
                     itemView.setOnClickListener(new View.OnClickListener() {
 
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        mOnMountPointItemListener.onMountPointSelected(mountPoint);
-                                                    }
-                                                });
+                        @Override
+                        public void onClick(View v) {
+                            mOnMountPointItemListener.onMountPointSelected(mountPoint);
+                        }
+                    });
                 }
             }
             else {

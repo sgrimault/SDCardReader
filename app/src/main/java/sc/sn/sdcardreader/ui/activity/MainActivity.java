@@ -28,8 +28,6 @@ public class MainActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_single);
-
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                                        .add(android.R.id.content,

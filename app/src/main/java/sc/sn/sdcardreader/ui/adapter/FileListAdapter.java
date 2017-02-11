@@ -49,21 +49,21 @@ public class FileListAdapter
      *
      * @author S. Grimault
      */
-    public class ViewHolder
+    class ViewHolder
             extends RecyclerView.ViewHolder {
 
         private final RecyclerView mRecyclerView;
         private final TextView mTextViewFileName;
 
-        public ViewHolder(ViewGroup parent,
-                          View itemView) {
+        ViewHolder(ViewGroup parent,
+                   View itemView) {
             super(itemView);
 
             mRecyclerView = (RecyclerView) parent;
             mTextViewFileName = (TextView) itemView.findViewById(android.R.id.text1);
         }
 
-        public void bind(final File file) {
+        void bind(final File file) {
             mTextViewFileName.setText(file.getName());
             int spanCount = getSpanCountFromLayoutManager();
 
