@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'jacoco'
+// apply plugin: 'jacoco'
 
 version = "0.0.3"
 
@@ -36,6 +36,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     compile "com.android.support:appcompat-v7:${rootProject.ext.androidSupportVersion}"
+    compile "com.android.support:design:${rootProject.ext.androidSupportVersion}"
     compile "com.android.support:recyclerview-v7:${rootProject.ext.androidSupportVersion}"
 
     testCompile 'junit:junit:4.12'

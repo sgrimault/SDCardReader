@@ -1,6 +1,7 @@
 package sc.sn.android.commons.ui.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +22,7 @@ import sc.sn.android.commons.R;
 public class RecyclerViewFragment
         extends Fragment {
 
+    protected View mLayout;
     protected RecyclerView mRecyclerView;
     protected View mProgressView;
     protected TextView mTextViewEmpty;
@@ -41,15 +43,19 @@ public class RecyclerViewFragment
         super.onViewCreated(view,
                             savedInstanceState);
 
+        mLayout = view.findViewById(android.R.id.content);
+
         mRecyclerView = (RecyclerView) view.findViewById(android.R.id.list);
         mRecyclerView.setHasFixedSize(true);
         // use a linear layout manager as default layout manager
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mProgressView = view.findViewById(android.R.id.progress);
+
         mTextViewEmpty = (TextView) view.findViewById(android.R.id.message);
     }
 
+    @NonNull
     public RecyclerView getRecyclerView() {
         return mRecyclerView;
     }

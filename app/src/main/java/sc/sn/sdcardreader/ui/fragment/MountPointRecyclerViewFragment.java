@@ -1,8 +1,11 @@
 package sc.sn.sdcardreader.ui.fragment;
 
-import android.app.Activity;
+import android.Manifest;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.View;
@@ -11,14 +14,16 @@ import java.util.List;
 
 import sc.sn.android.commons.model.MountPoint;
 import sc.sn.android.commons.ui.fragment.RecyclerViewFragment;
+import sc.sn.android.commons.util.PermissionUtils;
+import sc.sn.sdcardreader.R;
 import sc.sn.sdcardreader.loader.MountPointLoader;
 import sc.sn.sdcardreader.ui.adapter.MountPointAdapter;
 
 /**
  * A {@code Fragment} representing a {@code List} of {@link MountPoint}s.
  * <p/>
- * Activities containing this {@code Fragment} MUST implement the {@link sc.sn.sdcardreader.ui.fragment.MountPointRecyclerViewFragment.OnMountPointRecyclerViewFragmentListener}
- * interface.
+ * Activities containing this {@code Fragment} MUST implement the
+ * {@link MountPointRecyclerViewFragment.OnMountPointRecyclerViewFragmentListener} interface.
  *
  * @author S. Grimault
  */
@@ -26,6 +31,7 @@ public class MountPointRecyclerViewFragment
         extends RecyclerViewFragment {
 
     private static final int LOADER_MOUNT_POINT = 0;
+    private static final int REQUEST_EXTERNAL_STORAGE = 0;
 
     private MountPointAdapter mMountPointAdapter;
 
@@ -99,26 +105,67 @@ public class MountPointRecyclerViewFragment
                          .setAddDuration(500);
         getRecyclerView().getItemAnimator()
                          .setChangeDuration(500);
+
+        PermissionUtils.checkSelfPermissions(getContext(),
+                                             new PermissionUtils.OnCheckSelfPermissionListener() {
+                                                 @Override
+                                                 public void onPermissionsGranted() {
+                                                     loadMountPoints();
+                                                 }
+
+                                                 @Override
+                                                 public void onRequestPermissions(@NonNull String... permissions) {
+                                                     PermissionUtils.requestPermissions(MountPointRecyclerViewFragment.this,
+                                                                                        mLayout,
+                                                                                        R.string.snackbar_permission_external_storage_rationale,
+                                                                                        REQUEST_EXTERNAL_STORAGE,
+                                                                                        permissions);
+
+                                                 }
+                                             },
+                                             Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_EXTERNAL_STORAGE:
+                if (PermissionUtils.checkPermissions(grantResults)) {
+                    Snackbar.make(mLayout,
+                                  R.string.snackbar_permission_external_storage_available,
+                                  Snackbar.LENGTH_SHORT)
+                            .show();
 
-        getLoaderManager().initLoader(LOADER_MOUNT_POINT,
-                                      getArguments(),
-                                      mMountPointLoaderCallbacks);
+                    loadMountPoints();
+                }
+                else {
+                    Snackbar.make(mLayout,
+                                  R.string.snackbar_permissions_not_granted,
+                                  Snackbar.LENGTH_SHORT)
+                            .show();
+
+                    mMountPointAdapter.notifyDataSetChanged();
+                }
+
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode,
+                                                 permissions,
+                                                 grantResults);
+        }
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
 
         try {
-            mOnMountPointRecyclerViewFragmentListener = (OnMountPointRecyclerViewFragmentListener) activity;
+            mOnMountPointRecyclerViewFragmentListener = (OnMountPointRecyclerViewFragmentListener) context;
         }
         catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement " + OnMountPointRecyclerViewFragmentListener.class.getName());
+            throw new ClassCastException(context.toString() + " must implement " + OnMountPointRecyclerViewFragmentListener.class.getName());
         }
     }
 
@@ -127,6 +174,12 @@ public class MountPointRecyclerViewFragment
         super.onDetach();
 
         mOnMountPointRecyclerViewFragmentListener = null;
+    }
+
+    private void loadMountPoints() {
+        getLoaderManager().initLoader(LOADER_MOUNT_POINT,
+                                      getArguments(),
+                                      mMountPointLoaderCallbacks);
     }
 
     /**
