@@ -3,8 +3,12 @@ package sc.sn.android.commons.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.io.File;
+import java.io.IOException;
+
+import sc.sn.android.commons.BuildConfig;
 
 /**
  * Describes a mount point storage.
@@ -12,7 +16,10 @@ import java.io.File;
  * @author S. Grimault
  */
 public class MountPoint
-        implements Parcelable {
+        implements Parcelable,
+                   Comparable<MountPoint> {
+
+    private static final String TAG = MountPoint.class.getName();
 
     private final String mountPath;
     private final String storageState;
@@ -21,7 +28,24 @@ public class MountPoint
     public MountPoint(@NonNull final String mountPath,
                       @NonNull final String storageState,
                       @NonNull final StorageType storageType) {
-        this.mountPath = mountPath;
+        String resolvedMountPath;
+
+        try {
+            resolvedMountPath = new File(mountPath).getCanonicalPath();
+
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG,
+                      "MountPoint: '" + mountPath + "', canonical path: '" + resolvedMountPath + "'");
+            }
+        }
+        catch (IOException ioe) {
+            resolvedMountPath = mountPath;
+
+            Log.w(TAG,
+                  "MountPoint: failed to get the canonical path of '" + mountPath + "'");
+        }
+
+        this.mountPath = resolvedMountPath;
         this.storageState = storageState;
         this.storageType = storageType;
     }
@@ -80,6 +104,15 @@ public class MountPoint
         dest.writeString(mountPath);
         dest.writeString(storageState);
         dest.writeSerializable(storageType);
+    }
+
+    @Override
+    public int compareTo(@NonNull MountPoint mountPoint) {
+        if (storageType.equals(mountPoint.storageType)) {
+            return mountPath.compareTo(mountPoint.mountPath);
+        }
+
+        return storageType.compareTo(mountPoint.storageType);
     }
 
     @Override

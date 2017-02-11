@@ -13,11 +13,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.TreeSet;
 
 import sc.sn.android.commons.BuildConfig;
 import sc.sn.android.commons.R;
@@ -71,20 +73,25 @@ public class MountPointUtils {
     /**
      * Return the secondary external storage as {@link MountPoint} if found.
      *
+     * @param storageStates a set of storage states as filter if {@link MountPoint#getStorageState()}
+     *                      matches at least one
+     *
      * @return the secondary external storage or {@code null} if not found
      *
      * @see #getMountPoints()
      */
     @Nullable
-    public static MountPoint getExternalStorage() {
+    public static MountPoint getExternalStorage(@Nullable String... storageStates) {
         final List<MountPoint> mountPoints = getMountPoints();
         final Iterator<MountPoint> mountPointIterator = mountPoints.iterator();
         MountPoint externalMountPoint = null;
 
         while (mountPointIterator.hasNext() && (externalMountPoint == null)) {
             final MountPoint mountPoint = mountPointIterator.next();
+            final boolean checkStorageState = storageStates == null || storageStates.length == 0 || Arrays.asList(storageStates)
+                                                                                                          .contains(mountPoint.getStorageState());
             externalMountPoint = mountPoint.getStorageType()
-                                           .equals(MountPoint.StorageType.EXTERNAL) ? mountPoint : null;
+                                           .equals(MountPoint.StorageType.EXTERNAL) && checkStorageState ? mountPoint : null;
         }
 
         if (BuildConfig.DEBUG) {
@@ -112,12 +119,13 @@ public class MountPointUtils {
      */
     @NonNull
     public static List<MountPoint> getMountPoints() {
+        // avoid duplicate mount points found
         final Set<MountPoint> mountPoints = new HashSet<>();
 
         // first: add the primary external storage
         mountPoints.add(getInternalStorage());
 
-        // then: find all MountPoints from System environment
+        // then: try to find all MountPoints from System environment
         final List<MountPoint> mountPointsFromSystemEnv = getMountPointsFromSystemEnv();
         mountPoints.addAll(mountPointsFromSystemEnv);
 
@@ -143,7 +151,8 @@ public class MountPointUtils {
             }
         }
 
-        return new ArrayList<>(mountPoints);
+        // apply natural ordering using TreeSet
+        return new ArrayList<>(new TreeSet<>(mountPoints));
     }
 
     /**
@@ -267,10 +276,8 @@ public class MountPointUtils {
                                                                  (firstSecondaryStorage) ? MountPoint.StorageType.EXTERNAL : MountPoint.StorageType.USB);
 
                     if (BuildConfig.DEBUG) {
-                        if (BuildConfig.DEBUG) {
-                            Log.d(TAG,
-                                  "mount point found from system environment: " + mountPoint);
-                        }
+                        Log.d(TAG,
+                              "mount point found from system environment: " + mountPoint);
                     }
 
                     mountPoints.add(mountPoint);
@@ -280,10 +287,8 @@ public class MountPointUtils {
         }
 
         if (BuildConfig.DEBUG) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG,
-                      "mount points found from system environment: " + mountPoints.size());
-            }
+            Log.d(TAG,
+                  "mount points found from system environment: " + mountPoints.size());
         }
 
         return mountPoints;
@@ -365,10 +370,8 @@ public class MountPointUtils {
                                                                              storageType);
 
                                 if (BuildConfig.DEBUG) {
-                                    if (BuildConfig.DEBUG) {
-                                        Log.d(TAG,
-                                              "mount point found from '" + voldFstabFile.getAbsolutePath() + "': " + mountPoint);
-                                    }
+                                    Log.d(TAG,
+                                          "mount point found from '" + voldFstabFile.getAbsolutePath() + "': " + mountPoint);
                                 }
 
                                 mountPoints.add(mountPoint);
@@ -411,10 +414,8 @@ public class MountPointUtils {
         }
 
         if (BuildConfig.DEBUG) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG,
-                      "mount points found from 'vold.fstab': " + mountPoints.size());
-            }
+            Log.d(TAG,
+                  "mount points found from 'vold.fstab': " + mountPoints.size());
         }
 
         return mountPoints;
@@ -456,10 +457,8 @@ public class MountPointUtils {
                                                                          MountPoint.StorageType.EXTERNAL);
 
                             if (BuildConfig.DEBUG) {
-                                if (BuildConfig.DEBUG) {
-                                    Log.d(TAG,
-                                          "mount point found from '/proc/mounts': " + mountPoint);
-                                }
+                                Log.d(TAG,
+                                      "mount point found from '/proc/mounts': " + mountPoint);
                             }
 
                             mountPoints.add(mountPoint);
@@ -474,10 +473,8 @@ public class MountPointUtils {
         }
 
         if (BuildConfig.DEBUG) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG,
-                      "mount points found from '/proc/mounts': " + mountPoints.size());
-            }
+            Log.d(TAG,
+                  "mount points found from '/proc/mounts': " + mountPoints.size());
         }
 
         return mountPoints;

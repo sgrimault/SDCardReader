@@ -7,8 +7,6 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.util.List;
-
 import sc.sn.android.commons.BuildConfig;
 import sc.sn.android.commons.model.MountPoint;
 
@@ -17,7 +15,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.robolectric.RuntimeEnvironment.application;
 import static sc.sn.android.commons.model.MountPoint.StorageType.INTERNAL;
 import static sc.sn.android.commons.util.MountPointUtils.formatStorageSize;
-import static sc.sn.android.commons.util.MountPointUtils.getMountPointsFromSystemEnv;
 
 /**
  * Unit tests about {@link MountPointUtils}.
@@ -34,19 +31,6 @@ public class MountPointUtilsTest {
         final MountPoint mountPoint = MountPointUtils.getInternalStorage();
 
         assertNotNull(mountPoint);
-        assertEquals(INTERNAL,
-                     mountPoint.getStorageType());
-    }
-
-    @Test
-    public void testGetMountPointsFromSystemEnv() {
-        final List<MountPoint> mountPoints = getMountPointsFromSystemEnv();
-
-        assertNotNull(mountPoints);
-        assertEquals(1,
-                     mountPoints.size());
-
-        final MountPoint mountPoint = mountPoints.get(0);
         assertEquals(INTERNAL,
                      mountPoint.getStorageType());
     }
