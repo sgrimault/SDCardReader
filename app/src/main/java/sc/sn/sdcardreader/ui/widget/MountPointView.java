@@ -1,13 +1,12 @@
 package sc.sn.sdcardreader.ui.widget;
 
-import android.animation.Animator;
 import android.animation.ObjectAnimator;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
@@ -96,21 +95,21 @@ public class MountPointView
 
         switch (mountPoint.getStorageState()) {
             case Environment.MEDIA_MOUNTED:
-                mTextViewStorageStatus.setTextColor(getContext().getResources()
-                                                                .getColor(R.color.mount_point_mounted));
+                mTextViewStorageStatus.setTextColor(ContextCompat.getColor(getContext(),
+                                                                           R.color.mount_point_mounted));
                 break;
             case Environment.MEDIA_MOUNTED_READ_ONLY:
-                mTextViewStorageStatus.setTextColor(getContext().getResources()
-                                                                .getColor(R.color.mount_point_mounted_ro));
+                mTextViewStorageStatus.setTextColor(ContextCompat.getColor(getContext(),
+                                                                           R.color.mount_point_mounted_ro));
                 break;
             case Environment.MEDIA_UNMOUNTED:
-                mTextViewStorageStatus.setTextColor(getContext().getResources()
-                                                                .getColor(R.color.mount_point_unmounted));
+                mTextViewStorageStatus.setTextColor(ContextCompat.getColor(getContext(),
+                                                                           R.color.mount_point_unmounted));
                 break;
             default:
                 final TypedArray typedArray = getContext().getTheme()
                                                           .obtainStyledAttributes(R.style.AppTheme,
-                                                                                  new int[]{android.R.attr.textColorSecondary});
+                                                                                  new int[] {android.R.attr.textColorSecondary});
                 int textColorPrimaryResource = typedArray.getResourceId(0,
                                                                         0);
 
@@ -118,8 +117,8 @@ public class MountPointView
                     mTextViewStorageStatus.setTextColor(Color.BLACK);
                 }
                 else {
-                    mTextViewStorageStatus.setTextColor(getContext().getResources()
-                                                                    .getColor(textColorPrimaryResource));
+                    mTextViewStorageStatus.setTextColor(ContextCompat.getColor(getContext(),
+                                                                               textColorPrimaryResource));
                 }
 
                 typedArray.recycle();
@@ -164,7 +163,7 @@ public class MountPointView
             mProgressBarStorageUsed.setVisibility(View.INVISIBLE);
         }
     }
-
+    /*
     @SuppressLint("NewApi")
     public void setDetailsVisibility(final int visibility) {
         if (DeviceUtils.isPostHoneycomb()) {
@@ -204,4 +203,5 @@ public class MountPointView
 
         }
     }
+    */
 }
