@@ -7,11 +7,8 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -303,114 +300,85 @@ public class MountPointUtils {
     @NonNull
     private static List<MountPoint> getMountPointsFromVold() {
         final List<MountPoint> mountPoints = new ArrayList<>();
-        final File voldFstabFile = new File("/system/etc/vold.fstab");
-        FileReader fileReader = null;
-        BufferedReader bufferedReader = null;
 
-        if (voldFstabFile.exists()) {
-            try {
-                fileReader = new FileReader(voldFstabFile);
-                bufferedReader = new BufferedReader(fileReader);
-                String line;
+        try {
+            final Scanner scanner = new Scanner(new File("/system/etc/vold.fstab"));
+
+            while (scanner.hasNext()) {
+                String line = scanner.nextLine();
+
+                if (TextUtils.isEmpty(line)) {
+                    continue;
+                }
+
+                line = line.trim();
+
                 MountPoint.StorageType storageType = null;
 
-                while ((line = bufferedReader.readLine()) != null) {
-                    if (TextUtils.isEmpty(line)) {
-                        continue;
+                // parse line comment
+                if (line.startsWith("#")) {
+                    if (line.contains("internal")) {
+                        storageType = MountPoint.StorageType.INTERNAL;
                     }
+                    else if (line.contains("external")) {
+                        storageType = MountPoint.StorageType.EXTERNAL;
+                    }
+                    else if (line.contains("usb")) {
+                        storageType = MountPoint.StorageType.USB;
+                    }
+                    else {
+                        // storage type not found from line comment. Continue anyway
+                        storageType = null;
+                    }
+                }
 
-                    line = line.trim();
+                // parse 'media_type' only it the storage type was not found from line comment
+                if (line.startsWith("media_type") && (storageType == null)) {
+                    String[] tokens = line.split("\\s");
 
-                    // parse line comment
-                    if (line.startsWith("#")) {
-                        if (line.contains("internal")) {
-                            storageType = MountPoint.StorageType.INTERNAL;
-                        }
-                        else if (line.contains("external")) {
-                            storageType = MountPoint.StorageType.EXTERNAL;
-                        }
-                        else if (line.contains("usb")) {
+                    if (tokens.length == 3) {
+                        if (tokens[2].contains("usb")) {
                             storageType = MountPoint.StorageType.USB;
                         }
-                        else {
-                            // storage type not found from line comment. Continue anyway
-                            storageType = null;
-                        }
                     }
+                }
 
-                    // parse 'media_type' only it the storage type was not found from line comment
-                    if (line.startsWith("media_type") && (storageType == null)) {
-                        String[] tokens = line.split("\\s");
+                // parse 'dev_mount'
+                if (line.startsWith("dev_mount") && (storageType != null)) {
+                    String[] tokens = line.split("\\s");
 
-                        if (tokens.length == 3) {
-                            if (tokens[2].contains("usb")) {
-                                storageType = MountPoint.StorageType.USB;
+                    if (tokens.length >= 3) {
+                        File mountPath = new File(tokens[2]);
+                        String storageState = Environment.MEDIA_UNMOUNTED;
+
+                        if (mountPath.isDirectory()) {
+                            if (mountPath.canWrite()) {
+                                storageState = Environment.MEDIA_MOUNTED;
                             }
-                        }
-                    }
-
-                    // parse 'dev_mount'
-                    if (line.startsWith("dev_mount") && (storageType != null)) {
-                        String[] tokens = line.split("\\s");
-
-                        if (tokens.length >= 3) {
-                            File mountPath = new File(tokens[2]);
-                            String storageState = Environment.MEDIA_UNMOUNTED;
-
-                            if (mountPath.isDirectory()) {
-                                if (mountPath.canWrite()) {
-                                    storageState = Environment.MEDIA_MOUNTED;
-                                }
-                                else if (mountPath.canRead()) {
-                                    storageState = Environment.MEDIA_MOUNTED_READ_ONLY;
-                                }
-
-                                final MountPoint mountPoint = new MountPoint(tokens[2],
-                                                                             storageState,
-                                                                             storageType);
-
-                                if (BuildConfig.DEBUG) {
-                                    Log.d(TAG,
-                                          "mount point found from '" + voldFstabFile.getAbsolutePath() + "': " + mountPoint);
-                                }
-
-                                mountPoints.add(mountPoint);
+                            else if (mountPath.canRead()) {
+                                storageState = Environment.MEDIA_MOUNTED_READ_ONLY;
                             }
+
+                            final MountPoint mountPoint = new MountPoint(tokens[2],
+                                                                         storageState,
+                                                                         storageType);
+
+                            if (BuildConfig.DEBUG) {
+                                Log.d(TAG,
+                                      "mount point found from 'vold.fstab': " + mountPoint);
+                            }
+
+                            mountPoints.add(mountPoint);
                         }
                     }
                 }
             }
-            catch (IOException ioe) {
-                Log.w(TAG,
-                      ioe.getMessage());
-            }
-            finally {
-                if (fileReader != null) {
-                    try {
-                        fileReader.close();
-                    }
-                    catch (IOException ioe) {
-                        Log.w(TAG,
-                              ioe.getMessage());
-                    }
-                }
 
-                if (bufferedReader != null) {
-                    try {
-                        bufferedReader.close();
-                    }
-                    catch (IOException ioe) {
-                        Log.w(TAG,
-                              ioe.getMessage());
-                    }
-                }
-            }
+            scanner.close();
         }
-        else {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG,
-                      "'" + voldFstabFile.getAbsolutePath() + "' not found");
-            }
+        catch (FileNotFoundException fnfe) {
+            Log.w(TAG,
+                  fnfe.getMessage());
         }
 
         if (BuildConfig.DEBUG) {
@@ -466,6 +434,8 @@ public class MountPointUtils {
                     }
                 }
             }
+
+            scanner.close();
         }
         catch (FileNotFoundException fnfe) {
             Log.w(TAG,
