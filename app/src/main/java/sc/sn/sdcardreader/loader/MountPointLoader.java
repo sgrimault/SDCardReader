@@ -22,6 +22,6 @@ public class MountPointLoader
 
     @Override
     public List<MountPoint> loadInBackground() {
-        return MountPointUtils.getMountPoints();
+        return MountPointUtils.getMountPoints(getContext());
     }
 }
